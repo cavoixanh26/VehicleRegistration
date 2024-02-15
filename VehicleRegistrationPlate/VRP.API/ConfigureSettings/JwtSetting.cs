@@ -1,0 +1,10 @@
+﻿namespace VRP.API.ConfigureSettings
+{
+    public class JwtSetting
+    {
+        public const string JwtConfigure = "JWT";
+        public string ValidAudience { get; set; }
+        public string ValidIssuer { get; set; }
+        public string Secret { get; set; }
+    }
+}
