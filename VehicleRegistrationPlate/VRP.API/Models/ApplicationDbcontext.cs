@@ -6,6 +6,7 @@ using VRP.API.Models.Address;
 using VRP.API.Models.InformationUser;
 using VRP.API.Models.Procedure;
 using VRP.API.Models.Vehicle;
+using VRP.API.Seedings;
 
 namespace VRP.API.Models
 {
@@ -26,6 +27,8 @@ namespace VRP.API.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.LocationData();
+            builder.UserData();
         }
     }
 }
