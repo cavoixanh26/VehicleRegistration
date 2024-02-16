@@ -11,6 +11,7 @@ namespace VRP.API.Repositories
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IDistrictService, DistrictService>();
+            services.AddScoped<ICommuneService, CommuneService>();
             return services;
         }
     }
