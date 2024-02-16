@@ -1,0 +1,82 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@Html.Partial("StepperPartialView")
+<div class="container">
+    <h4>Xác thực thông tin chủ xe</h4>
+    <form>
+        <div class="row">
+            <div class="mb-3 col-8">
+                <label class="form-label">Họ và tên chủ xe *</label>
+                <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3 col-4">
+                <label class="form-label">Ngày/ tháng/ năm sinh *</label>
+                <input type="date" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+        <p>Địa chỉ chủ xe:</p>
+            <div class="mb-3 col-4">
+                <label class="form-label">Tỉnh/Thành phổ *</label>
+                <select class="form-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+            <div class="mb-3 col-4">
+                <label class="form-label">Quận/ Huyện *</label>
+                <select class="form-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+            <div class="mb-3 col-4">
+                <label class="form-label">Phường/Xã *</label>
+                <select class="form-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label">Chi tiết địa chỉ (số nhà/Tên đường) *</label>
+                <input type="text" class="form-control" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-4">
+                <label class="form-label">Số CMND/CCCD/Hộ chiếu của chủ xe *</label>
+                <input type="text" class="form-control" required />
+            </div>
+            <div class="mb-3 col-4">
+                <label class="form-label">Cấp ngày *</label>
+                <input type="date" class="form-control" required />
+            </div>
+            <div class="mb-3 col-4">
+                <label class="form-label">Nơi cấp *</label>
+                <input type="text" class="form-control" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-6">
+                <label class="form-label">Điện thoại của chủ xe *</label>
+                <input type="text" class="form-control" required />
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label">Email của chủ xe</label>
+                <input type="text" class="form-control"/>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Comfirm information</button>
+    </form>
+</div>
