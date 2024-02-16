@@ -8,6 +8,7 @@ using System.Text;
 using VRP.API.ConfigureSettings;
 using VRP.API.Models;
 using VRP.API.Models.Authentication;
+using VRP.API.Repositories;
 
 namespace VRP.API
 {
@@ -96,6 +97,9 @@ namespace VRP.API
                     }
                 });
             });
+
+
+            builder.Services.ConfigureApplicationServices();
 
             builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection(JwtSetting.JwtConfigure));
             var app = builder.Build();
