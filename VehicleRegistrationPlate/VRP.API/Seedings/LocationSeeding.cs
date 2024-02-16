@@ -99,7 +99,7 @@ namespace VRP.API.Seedings
                     Id = 10,
                     Name = "Huyện Hoài Đức",
                     CityId = 1,
-                    NumberIdentify = "Hoài Đức"
+                    NumberIdentify = "X5"
                 });
 
             builder.Entity<Commune>().HasData(
