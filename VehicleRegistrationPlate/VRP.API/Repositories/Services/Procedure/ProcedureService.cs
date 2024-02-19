@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using VRP.API.Extensions;
 using VRP.API.HandlingExceptions;
 using VRP.API.Models;
 using VRP.API.Models.InformationUser;
@@ -69,6 +71,26 @@ namespace VRP.API.Repositories.Services.Procedure
                     throw HttpException.BadRequestException(ex.Message);
 			    }
             }
+        }
+
+        public async Task<ProcedureResponse> GetProcedures(ProcedureRequest request)
+        {
+            var procedures = context.RegistrationProcedures
+                .Where(x => string.IsNullOrEmpty(request.KeyWords)
+                         || x.User.Email.Contains(request.KeyWords)
+                         || x.User.PhoneNumber.Equals(request.KeyWords)
+                         && (!request.TypeOfRegistration.HasValue || (int)x.TypeOfRegistration == request.StatusProcedure)
+                         && (!request.StatusProcedure.HasValue || (int)x.StatusProcudure == request.StatusProcedure))
+                .Include(x => x.User);
+
+            var procedureDtos = mapper.Map<List<ProcedureDto>>
+                (procedures.Paginate(request).OrderByDescending(x => x.Id));
+
+            return new ProcedureResponse
+            {
+                Procedures = procedureDtos,
+                Page = request.GetPagingResponse(procedures.Count())
+            };
         }
 
         private async Task CheckExistedLocation(int communeId, int districtId, int cityId)
