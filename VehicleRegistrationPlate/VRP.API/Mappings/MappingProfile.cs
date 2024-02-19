@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using VRP.API.Models.Address;
+using VRP.API.Models.InformationUser;
 using VRP.API.ViewModels.Locations.City;
 using VRP.API.ViewModels.Locations.Commune;
 using VRP.API.ViewModels.Locations.District;
+using VRP.API.ViewModels.Procedures;
 
 namespace VRP.API.Mappings
 {
@@ -19,6 +21,11 @@ namespace VRP.API.Mappings
                 .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.District.City.Name))
                 .ForMember(dest => dest.CityId, opt => opt.MapFrom(src => src.District.City.Id))
                 .ReverseMap();
+
+            CreateMap<UserInformationRequest, InformationUserRequestInProcedure>()
+                .ReverseMap();
+            CreateMap<CitizenIdentificationRequest, CitizenIdentifycation>().ReverseMap();
         }
     }
 }
+
