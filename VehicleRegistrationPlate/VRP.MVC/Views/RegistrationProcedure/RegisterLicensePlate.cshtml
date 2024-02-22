@@ -18,32 +18,23 @@
             </div>
         </div>
         <div class="row">
-        <p class="mb-0">Địa chỉ chủ xe:</p>
+            <p class="mb-0">Địa chỉ chủ xe:</p>
             <div class="mb-3 col-4">
                 <label class="form-label">Tỉnh/Thành phổ *</label>
-                <select class="form-select">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select id="citySelect" class="form-select">
+                    <option selected>Open this select your city</option>
                 </select>
             </div>
             <div class="mb-3 col-4">
                 <label class="form-label">Quận/ Huyện *</label>
-                <select class="form-select">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select id="districtSelect" class="form-select">
+                    <option selected>Open this select your district</option>
                 </select>
             </div>
             <div class="mb-3 col-4">
                 <label class="form-label">Phường/Xã *</label>
-                <select class="form-select">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select id="communeSelect" class="form-select">
+                    <option selected>Open this select your commune</option>
                 </select>
             </div>
         </div>
@@ -74,9 +65,52 @@
             </div>
             <div class="mb-3 col-6">
                 <label class="form-label">Email của chủ xe</label>
-                <input type="text" class="form-control"/>
+                <input type="text" class="form-control" />
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Comfirm information</button>
     </form>
 </div>
+
+<script>
+    $(document).ready(function (){
+        loadOptionLocation('/registration/cities', '#citySelect');
+        loadOptionLocation('/registration/districts', '#districtSelect');
+        loadOptionLocation('/registration/communes', '#communeSelect');
+    });
+
+    $('#citySelect').change(function () {
+        var cityId = $(this).val();
+        if (cityId){
+            clearOption('#districtSelect')
+            loadOptionLocation('/registration/districts?cityId=' + cityId, '#districtSelect');
+        }
+    });
+
+    $('#districtSelect').change(function () {
+        var districtId = $(this).val();
+        if (districtId) {
+            clearOption('#communeSelect')
+            loadOptionLocation('/registration/communes?districtId=' + districtId, '#communeSelect');
+        }
+    });
+
+    function loadOptionLocation(url, selectId){
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                data.forEach(function (item) {
+                    $(selectId).append($('<option>').val(item.id).text(item.name));
+                });
+            },
+            error: function () {
+                console.log('Failed to load');
+            }
+        });
+    }
+
+    function clearOption(selectId){
+        $(selectId).empty();
+    }
+</script>

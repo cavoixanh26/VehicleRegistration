@@ -1,3 +1,5 @@
+using VRP.MVC.Repositories.HttpClient;
+
 namespace VRP.MVC
 {
     public class Program
@@ -8,6 +10,10 @@ namespace VRP.MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddHttpClient();
+
+            builder.Services.AddScoped<IHttpCallService, HttpCallService>();
 
             var app = builder.Build();
 

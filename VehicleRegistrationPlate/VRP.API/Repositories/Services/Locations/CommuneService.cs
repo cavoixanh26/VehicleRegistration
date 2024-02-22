@@ -36,9 +36,8 @@ namespace VRP.API.Repositories.Services.Locations
         public async Task<CommuneResponse> GetCommunes(CommuneRequest request)
         {
             var communes = await context.Communes
-                .Where(x => string.IsNullOrEmpty(request.KeyWords)
-                || x.Name.Contains(request.KeyWords)
-                && (!request.CityId.HasValue || x.District.CityId == request.CityId)
+                .Where(x => (string.IsNullOrEmpty(request.KeyWords)
+                || x.Name.Contains(request.KeyWords))
                 && (!request.DistrictId.HasValue || x.DistrictId == request.DistrictId))
                 .Include(x => x.District)
                 .ThenInclude(x => x.City)

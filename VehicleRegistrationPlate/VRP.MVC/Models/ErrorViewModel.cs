@@ -1,4 +1,4 @@
-namespace VRP.MVC.Models
+﻿namespace VRP.MVC.Models
 {
     public class ErrorViewModel
     {
