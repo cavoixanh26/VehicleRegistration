@@ -22,9 +22,31 @@ namespace VRP.MVC.Controllers
         }
 
         [Route("car-license-plate")]
-        public async Task<IActionResult> RegisterLicensePlate(CarLicensePlateRequest request)
+        public async Task<IActionResult> RegisterLicensePlate()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Route("car-license-plate")]
+        public async Task<IActionResult> RegisterLicensePlate(CarLicensePlateRequest request)
+        {
+            var fullName = request.InformationUser.FirstName;
+            var words = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            request.InformationUser.FirstName = words[0];
+            request.InformationUser.LastName = words[words.Length - 1];
+            if (words.Length > 2)
+            {
+                var middleWords = new string[words.Length - 2];
+                Array.Copy(words, 1, middleWords, 0, words.Length - 2);
+
+                request.InformationUser.MidlleName = string.Join(" ", middleWords);
+            }
+
+            var response = await httpCallService.PostData<CarLicensePlateResponse, CarLicensePlateRequest>
+                ("Procedures/car-license-plate", request);
+
+            return RedirectToAction("Index", "Home");
         }
 
         [Route("cities")]

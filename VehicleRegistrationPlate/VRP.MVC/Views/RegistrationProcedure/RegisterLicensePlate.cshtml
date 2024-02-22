@@ -1,75 +1,79 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿@using VRP.MVC.Models.Procedures;
+@model CarLicensePlateRequest
+@*
 *@
 @{
 }
 @Html.Partial("StepperPartialView")
 <div class="container">
     <h4>Xác thực thông tin chủ xe</h4>
-    <form>
-        <div class="row">
+    @using (Html.BeginForm("RegisterLicensePlate", "RegistrationProcedure", FormMethod.Post))
+    {
+        
+    <div class="row">
             <div class="mb-3 col-8">
-                <label class="form-label">Họ và tên chủ xe *</label>
-                <input type="text" class="form-control" required>
+                <label asp-for="InformationUser.FirstName" class="form-label">Họ và tên chủ xe *</label>
+                <input asp-for="InformationUser.FirstName" type="text" class="form-control" required>
             </div>
             <div class="mb-3 col-4">
-                <label class="form-label">Ngày/ tháng/ năm sinh *</label>
-                <input type="date" class="form-control">
+                <label asp-for="InformationUser.DateOfBirth" class="form-label">Ngày/ tháng/ năm sinh *</label>
+                <input asp-for="InformationUser.DateOfBirth" type="date" class="form-control">
             </div>
         </div>
         <div class="row">
             <p class="mb-0">Địa chỉ chủ xe:</p>
             <div class="mb-3 col-4">
-                <label class="form-label">Tỉnh/Thành phổ *</label>
-                <select id="citySelect" class="form-select">
+                <label asp-for="InformationUser.CityId" class="form-label">Tỉnh/Thành phổ *</label>
+                <select id="citySelect" class="form-select" asp-for="InformationUser.CityId">
                     <option selected>Open this select your city</option>
                 </select>
             </div>
             <div class="mb-3 col-4">
-                <label class="form-label">Quận/ Huyện *</label>
-                <select id="districtSelect" class="form-select">
+                <label asp-for="InformationUser.DistrictId" class="form-label">Quận/ Huyện *</label>
+                <select id="districtSelect" class="form-select" asp-for="InformationUser.DistrictId">
                     <option selected>Open this select your district</option>
                 </select>
             </div>
             <div class="mb-3 col-4">
-                <label class="form-label">Phường/Xã *</label>
-                <select id="communeSelect" class="form-select">
+                <label asp-for="InformationUser.CommuneId" class="form-label">Phường/Xã *</label>
+                <select id="communeSelect" class="form-select" asp-for="InformationUser.CommuneId">
                     <option selected>Open this select your commune</option>
                 </select>
             </div>
         </div>
         <div class="row">
             <div class="mb-3">
-                <label class="form-label">Chi tiết địa chỉ (số nhà/Tên đường) *</label>
-                <input type="text" class="form-control" required />
+                <label asp-for="InformationUser.Street" class="form-label">Chi tiết địa chỉ (số nhà/Tên đường) *</label>
+                <input type="text" class="form-control" required asp-for="InformationUser.Street" />
             </div>
         </div>
         <div class="row">
             <div class="mb-3 col-4">
-                <label class="form-label">Số CMND/CCCD/Hộ chiếu của chủ xe *</label>
-                <input type="text" class="form-control" required />
+                <label asp-for="CitizenIdentification.CitizenId" class="form-label">Số CMND/CCCD/Hộ chiếu của chủ xe *</label>
+                <input asp-for="CitizenIdentification.CitizenId" type="text" class="form-control" required />
             </div>
             <div class="mb-3 col-4">
-                <label class="form-label">Cấp ngày *</label>
-                <input type="date" class="form-control" required />
+                <label asp-for="CitizenIdentification.IssuanceDate" class="form-label">Cấp ngày *</label>
+                <input asp-for="CitizenIdentification.IssuanceDate" type="date" class="form-control" required />
             </div>
             <div class="mb-3 col-4">
-                <label class="form-label">Nơi cấp *</label>
-                <input type="text" class="form-control" required />
+                <label asp-for="CitizenIdentification.IssuanceLocation" class="form-label">Nơi cấp *</label>
+                <input asp-for="CitizenIdentification.IssuanceLocation" type="text" class="form-control" required />
             </div>
         </div>
         <div class="row">
             <div class="mb-3 col-6">
-                <label class="form-label">Điện thoại của chủ xe *</label>
-                <input type="text" class="form-control" required />
+                <label asp-for="InformationUser.PhoneNumber" class="form-label">Điện thoại của chủ xe *</label>
+                <input asp-for="InformationUser.PhoneNumber" type="text" class="form-control" required />
             </div>
             <div class="mb-3 col-6">
-                <label class="form-label">Email của chủ xe</label>
-                <input type="text" class="form-control" />
+                <label asp-for="InformationUser.Email" class="form-label">Email của chủ xe</label>
+                <input asp-for="InformationUser.Email" type="text" class="form-control" />
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Comfirm information</button>
-    </form>
+    }
+
 </div>
 
 <script>

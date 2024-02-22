@@ -1,5 +1,7 @@
 ﻿using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text;
 using VRP.MVC.Constrants;
 using VRP.MVC.Models.BaseDtos;
 
@@ -42,6 +44,32 @@ namespace VRP.MVC.Repositories.HttpClient
             if (response.IsSuccessStatusCode)
             {
                 data = await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);   
+            }else
+            {
+                Debug.WriteLine("Failure");
+            }
+            return data;
+        }
+
+        public async Task<T> PostData<T, TRequest>(string endPoint, TRequest request)
+        {
+            T data = default(T);
+
+            var url = ApiUrl.Url + endPoint;
+
+            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = content
+            };
+
+            var httpClient = httpClientFactory.CreateClient();
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                data = await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);
             }else
             {
                 Debug.WriteLine("Failure");
