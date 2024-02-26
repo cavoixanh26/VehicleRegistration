@@ -1,4 +1,5 @@
-﻿using VRP.API.Models.Procedure;
+﻿using System.ComponentModel;
+using VRP.API.Models.Procedure;
 
 namespace VRP.API.ViewModels.Procedures
 {
@@ -18,5 +19,13 @@ namespace VRP.API.ViewModels.Procedures
             set { } 
         }
         public int StatusProcudure { get; set; }
+        public string StatusProcedureName 
+        {
+            get 
+            {
+                return Enum.GetName(typeof(StatusProcudureEnum), StatusProcudure);
+            }
+            set{} 
+        }
     }
 }

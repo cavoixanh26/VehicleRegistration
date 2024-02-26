@@ -1,0 +1,54 @@
+﻿@using VRP.MVC.Models.Procedures;
+
+@model ProcedureResponse
+@*
+*@
+@{
+}
+
+
+<h4>List of requested license plate procedure</h4>
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <select class="form-select me-2" aria-label="Default select example">
+                <option selected>Type of procedure</option>
+                <option value="0">New</option>
+                <option value="1">Renew</option>
+            </select>
+            <select class="form-select me-2" aria-label="Default select example">
+                <option selected>Processing</option>
+                <option value="0">Verify User's Information</option>
+                <option value="1">Verify Vehicle</option>
+            </select>
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Requested user name</th>
+            <th scope="col">Type of registration</th>
+            <th scope="col">In process</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pro in Model.Procedures)
+        {
+            <tr>
+                <th scope="row">@pro.Id</th>
+                <td>@pro.UserName</td>
+                <td>@pro.TypeOfRegistrationName</td>
+                <td>@pro.StatusProcedureName</td>
+                <td>
+                    <button type="button" class="btn btn-primary">Show detail</button>
+                    <button type="button" class="btn btn-danger">Reject</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
