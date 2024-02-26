@@ -1,14 +1,14 @@
 ﻿@using VRP.MVC.Models.Procedures;
-@model UserInformationProcedure
-@Html.Partial("StepperPartialView")
+@model RequestedProcedure
+@Html.Partial("StepperPartialView", Model)
 <h4>Xác thực thông tin chủ xe</h4>
 <div class="ms-4 me-4">
-    <p><b>Họ và tên: </b>@Model.FirstName @Model.MidlleName @Model.LastName</p>
-    <p><b>Ngày tháng năm sinh: </b>@Model.DateOfBirth.ToString("dd/MM/yyyy")</p>
-    <p><b>CMND/CCCD: </b>@Model.CitizenId - <b>Ngày cấp: </b>@Model.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.CitizenIssuanceLocation</p>
-    <p><b>Số điện thoại: </b>@Model.PhoneNumber</p>
-    <p><b>Email: </b>@Model.Email</p>
-    <p><b>Địa chỉ: </b>@Model.Street, @Model.CommuneName, @Model.DistrictName, @Model.CityName</p>
+    <p><b>Họ và tên: </b>@Model.UserInformationProcedure.FirstName @Model.UserInformationProcedure.MidlleName @Model.UserInformationProcedure.LastName</p>
+    <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure.DateOfBirth.ToString("dd/MM/yyyy")</p>
+    <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceLocation</p>
+    <p><b>Số điện thoại: </b>@Model.UserInformationProcedure.PhoneNumber</p>
+    <p><b>Email: </b>@Model.UserInformationProcedure.Email</p>
+    <p><b>Địa chỉ: </b>@Model.UserInformationProcedure.Street, @Model.UserInformationProcedure.CommuneName, @Model.UserInformationProcedure.DistrictName, @Model.UserInformationProcedure.CityName</p>
 </div>
 
 <div>

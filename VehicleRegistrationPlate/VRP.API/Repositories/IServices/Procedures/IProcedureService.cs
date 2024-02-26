@@ -6,6 +6,6 @@ namespace VRP.API.Repositories.IServices.Procedures
     {
         Task<CarLicensePlateResponse> CreateCarLicensePlate(CarLicensePlateRequest request, Guid userId);
         Task<ProcedureResponse> GetProcedures(ProcedureRequest request);
-        Task<UserInformationProcedure> GetUserInformationProcedureById(int id);
+        Task<RequestedProcedure> GetUserInformationProcedureById(int id);
     }
 }

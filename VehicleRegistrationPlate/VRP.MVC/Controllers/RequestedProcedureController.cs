@@ -24,7 +24,7 @@ namespace VRP.MVC.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetDetail(int id)
         {
-            var response = await httpCallService.GetData<UserInformationProcedure>($"RequestedProcedures/{id}", null);
+            var response = await httpCallService.GetData<RequestedProcedure>($"RequestedProcedures/{id}", null);
             return View(response);
         }
     }

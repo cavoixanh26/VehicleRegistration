@@ -18,5 +18,6 @@
         public string CitizenId { get; set; }
         public DateTime CitizenIssuanceDate { get; set; }
         public string CitizenIssuanceLocation { get; set; }
+        public int ProcedureId { get; set; }
     }
 }

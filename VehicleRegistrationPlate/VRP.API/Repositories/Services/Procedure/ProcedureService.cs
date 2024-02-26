@@ -74,15 +74,20 @@ namespace VRP.API.Repositories.Services.Procedure
             }
         }
 
-        public async Task<UserInformationProcedure> GetUserInformationProcedureById(int procedureId)
+        public async Task<RequestedProcedure> GetUserInformationProcedureById(int procedureId)
         {
-            var procedure = await context.InformationUserRequestInProcedures
+            var procedure = await context.RegistrationProcedures.FirstOrDefaultAsync(x => x.Id == procedureId);
+            var procedureResponse = mapper.Map<RequestedProcedure>(procedure);
+            if (procedureResponse == null)
+                throw HttpException.NotFoundException("Not Found Procedure");
+
+            var informationUserInProcedure = await context.InformationUserRequestInProcedures
                 .Include(x => x.Procedure)
                 .Include(x => x.City)
                 .Include(x => x.District)
                 .Include(x => x.Commune)
                 .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
-            if (procedure == null)
+            if (informationUserInProcedure == null)
                 throw HttpException.NotFoundException("Not Found procedure");
 
             var citizenIdentifycationOfUser = await context.CitizenIdentificationRequestInProcedures
@@ -91,12 +96,14 @@ namespace VRP.API.Repositories.Services.Procedure
             if (citizenIdentifycationOfUser == null)
                 throw HttpException.NotFoundException("Not Found citizen");
 
-            var userInformationResponse = mapper.Map<UserInformationProcedure>(procedure);
+            var userInformationResponse = mapper.Map<UserInformationProcedure>(informationUserInProcedure);
             userInformationResponse.CitizenId = citizenIdentifycationOfUser.CitizenId;
             userInformationResponse.CitizenIssuanceDate = citizenIdentifycationOfUser.IssuanceDate;
             userInformationResponse.CitizenIssuanceLocation = citizenIdentifycationOfUser.IssuanceLocation;
 
-            return userInformationResponse;
+            procedureResponse.UserInformationProcedure = userInformationResponse;
+
+            return procedureResponse;
         }
 
         public async Task<ProcedureResponse> GetProcedures(ProcedureRequest request)

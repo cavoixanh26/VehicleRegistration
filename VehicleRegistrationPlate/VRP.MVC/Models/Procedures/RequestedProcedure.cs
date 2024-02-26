@@ -1,5 +1,19 @@
 ﻿namespace VRP.MVC.Models.Procedures
 {
+    public class RequestedProcedure
+    {
+        public int Id { get; set; }
+        public int? VehicleId { get; set; }
+        public Guid? UserId { get; set; }
+        public string? UserName { get; set; }
+        public int TypeOfRegistration { get; set; }
+        public string TypeOfRegistrationName { get; set; }
+        public int StatusProcudure { get; set; }
+        public string StatusProcedureName { get; set; }
+        public UserInformationProcedure? UserInformationProcedure { get; set; }
+    }
+
+
     public class UserInformationProcedure
     {
         public string FirstName { get; set; }
@@ -18,5 +32,6 @@
         public string CitizenId { get; set; }
         public DateTime CitizenIssuanceDate { get; set; }
         public string CitizenIssuanceLocation { get; set; }
+        public int ProcedureId { get; set; }
     }
 }

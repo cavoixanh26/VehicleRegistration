@@ -36,7 +36,10 @@ namespace VRP.API.Mappings
                 .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
                 .ForMember(dest => dest.CommuneName, opt => opt.MapFrom(src => src.Commune.Name))
                 .ReverseMap();
-                
+
+            CreateMap<RegistrationProcedure, RequestedProcedure>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ReverseMap();
         }
     }
 }
