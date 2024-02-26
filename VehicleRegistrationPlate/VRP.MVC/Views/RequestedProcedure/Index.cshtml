@@ -45,7 +45,7 @@
                 <td>@pro.TypeOfRegistrationName</td>
                 <td>@pro.StatusProcedureName</td>
                 <td>
-                    <button type="button" class="btn btn-primary">Show detail</button>
+                    <a asp-controller="RequestedProcedure" asp-action="GetDetail" asp-route-id="@pro.Id" class="btn btn-primary">Show detail</a>
                     <button type="button" class="btn btn-danger">Reject</button>
                 </td>
             </tr>
