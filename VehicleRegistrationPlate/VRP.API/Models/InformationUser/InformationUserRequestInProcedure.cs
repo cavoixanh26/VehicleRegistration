@@ -1,4 +1,5 @@
-﻿using VRP.API.Models.Procedure;
+﻿using VRP.API.Models.Address;
+using VRP.API.Models.Procedure;
 
 namespace VRP.API.Models.InformationUser
 {
@@ -17,5 +18,8 @@ namespace VRP.API.Models.InformationUser
         public string? Email { get; set; }
         public int ProcedureId { get; set; }
         public virtual RegistrationProcedure Procedure { get; set; }
+        public virtual City? City { get; set; }
+        public virtual District? District { get; set; }
+        public virtual Commune? Commune { get; set; }
     }
 }

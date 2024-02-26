@@ -24,6 +24,7 @@ namespace VRP.API.Models
         public DbSet<TypeOfVehicle> TypeOfVehicles { get; set; }
         public DbSet<VehicleRegistration> VehicleRegistrations { get; set; }
         public DbSet<InformationUserRequestInProcedure> InformationUserRequestInProcedures { get; set; }
+        public DbSet<CitizenIdentificationRequestInProcedure> CitizenIdentificationRequestInProcedures{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

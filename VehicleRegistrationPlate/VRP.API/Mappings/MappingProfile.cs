@@ -26,9 +26,17 @@ namespace VRP.API.Mappings
             CreateMap<UserInformationRequest, InformationUserRequestInProcedure>()
                 .ReverseMap();
             CreateMap<CitizenIdentificationRequest, CitizenIdentifycation>().ReverseMap();
+            CreateMap<CitizenIdentificationRequest, CitizenIdentificationRequestInProcedure>().ReverseMap();
             CreateMap<RegistrationProcedure, ProcedureDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
                 .ReverseMap();
+
+            CreateMap<InformationUserRequestInProcedure, UserInformationProcedure>()
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City.Name))
+                .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
+                .ForMember(dest => dest.CommuneName, opt => opt.MapFrom(src => src.Commune.Name))
+                .ReverseMap();
+                
         }
     }
 }

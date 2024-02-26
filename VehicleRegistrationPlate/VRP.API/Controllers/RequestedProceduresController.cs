@@ -29,5 +29,19 @@ namespace VRP.API.Controllers
                 return StatusCode((int) ex.Status, ex.Message);
             }          
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProcedureById(int id)
+        {
+            try
+            {
+                var response = await procedureService.GetUserInformationProcedureById(id);
+                return Ok(response);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.Status, ex.Message);
+            }
+        }
     }
 }

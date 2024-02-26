@@ -55,8 +55,9 @@ namespace VRP.API.Repositories.Services.Procedure
                     var informationUser = mapper.Map<InformationUserRequestInProcedure>(request.InformationUser);
                     informationUser.ProcedureId = procedure.Id;
                     await context.InformationUserRequestInProcedures.AddAsync(informationUser);
-                    var citizenIdentity = mapper.Map<CitizenIdentifycation>(request.CitizenIdentification);
-                    await context.CitizenIdentifycations.AddAsync(citizenIdentity);
+                    var citizenIdentity = mapper.Map<CitizenIdentificationRequestInProcedure>(request.CitizenIdentification);
+                    citizenIdentity.ProcedureId = procedure.Id;
+                    await context.CitizenIdentificationRequestInProcedures.AddAsync(citizenIdentity);
 
                     await context.SaveChangesAsync();
                     await transation.CommitAsync();
@@ -71,6 +72,31 @@ namespace VRP.API.Repositories.Services.Procedure
                     throw HttpException.BadRequestException(ex.Message);
 			    }
             }
+        }
+
+        public async Task<UserInformationProcedure> GetUserInformationProcedureById(int procedureId)
+        {
+            var procedure = await context.InformationUserRequestInProcedures
+                .Include(x => x.Procedure)
+                .Include(x => x.City)
+                .Include(x => x.District)
+                .Include(x => x.Commune)
+                .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
+            if (procedure == null)
+                throw HttpException.NotFoundException("Not Found procedure");
+
+            var citizenIdentifycationOfUser = await context.CitizenIdentificationRequestInProcedures
+                .Include(x => x.Procedure)
+                .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
+            if (citizenIdentifycationOfUser == null)
+                throw HttpException.NotFoundException("Not Found citizen");
+
+            var userInformationResponse = mapper.Map<UserInformationProcedure>(procedure);
+            userInformationResponse.CitizenId = citizenIdentifycationOfUser.CitizenId;
+            userInformationResponse.CitizenIssuanceDate = citizenIdentifycationOfUser.IssuanceDate;
+            userInformationResponse.CitizenIssuanceLocation = citizenIdentifycationOfUser.IssuanceLocation;
+
+            return userInformationResponse;
         }
 
         public async Task<ProcedureResponse> GetProcedures(ProcedureRequest request)
