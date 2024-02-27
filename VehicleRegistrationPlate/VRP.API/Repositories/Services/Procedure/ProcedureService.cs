@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using VRP.API.Extensions;
@@ -9,6 +10,7 @@ using VRP.API.Models.Procedure;
 using VRP.API.Repositories.IServices.Locations;
 using VRP.API.Repositories.IServices.Procedures;
 using VRP.API.ViewModels.Procedures;
+using VRP.API.ViewModels.Procedures.HanldeRequest;
 
 namespace VRP.API.Repositories.Services.Procedure
 {
@@ -131,6 +133,43 @@ namespace VRP.API.Repositories.Services.Procedure
             await communeService.GetCommuneById(communeId);
             await districtService.GetDistrictById(districtId);
             await cityService.GetCityById(cityId);
+        }
+
+        public async Task ApproveRequestedProcedure(ApproveRequestedProcedure request)
+        {
+            var procedure = await GetProcedureInProcess(request.ProcedureId);
+
+            // up positive of enum
+            procedure.StatusProcudure += 1;
+            context.Entry(procedure).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task RejectRequestProcedure(RejectRequestedProcedure request)
+        {
+            var procedure = await GetProcedureInProcess(request.ProcedureId);
+
+            // up positive of enum
+            procedure.StatusProcudure += 2;
+            context.Entry(procedure).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
+
+        // get procedure and check satified status
+        private async Task<RegistrationProcedure> GetProcedureInProcess(int procedureId)
+        {
+            var procedure = await context.RegistrationProcedures
+                .FirstOrDefaultAsync(x => x.Id == procedureId);
+            if (procedure == null)
+                throw HttpException.NotFoundException("Not found procedure");
+
+            if (procedure.StatusProcudure != StatusProcudureEnum.VerifyInformationOfRequester
+                && procedure.StatusProcudure != StatusProcudureEnum.VerifyVehicle)
+            {
+                throw HttpException.BadRequestException("Can't handle this requested procedure");
+            }
+
+            return procedure;
         }
     }
 }

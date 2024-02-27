@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using VRP.API.HandlingExceptions;
 using VRP.API.Repositories.IServices.Procedures;
 using VRP.API.ViewModels.Procedures;
+using VRP.API.ViewModels.Procedures.HanldeRequest;
 
 namespace VRP.API.Controllers
 {
@@ -37,6 +38,34 @@ namespace VRP.API.Controllers
             {
                 var response = await procedureService.GetUserInformationProcedureById(id);
                 return Ok(response);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.Status, ex.Message);
+            }
+        }
+
+        [HttpPut("approval-request")]
+        public async Task<IActionResult> ApproveRequest([FromBody] ApproveRequestedProcedure request)
+        {
+            try
+            {
+                await procedureService.ApproveRequestedProcedure(request);
+                return NoContent();
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int) ex.Status, ex.Message);
+            }
+        }
+
+        [HttpPut("rejection-request")]
+        public async Task<IActionResult> RejectRequest([FromBody] RejectRequestedProcedure request)
+        {
+            try
+            {
+                await procedureService.RejectRequestProcedure(request);
+                return NoContent();
             }
             catch (HttpException ex)
             {
