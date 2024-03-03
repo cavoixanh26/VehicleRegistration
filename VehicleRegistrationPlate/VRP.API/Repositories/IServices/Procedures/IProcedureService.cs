@@ -8,8 +8,8 @@ namespace VRP.API.Repositories.IServices.Procedures
         Task<CarLicensePlateResponse> CreateCarLicensePlate(CarLicensePlateRequest request, Guid userId);
         Task<ProcedureResponse> GetProcedures(ProcedureRequest request);
         Task<RequestedProcedure> GetUserInformationProcedureById(int id);
-        Task ApproveRequestedProcedure(ApproveRequestedProcedure request);
-        Task RejectRequestProcedure(RejectRequestedProcedure request);
+        Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request);
+        Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request);
 
     }
 }

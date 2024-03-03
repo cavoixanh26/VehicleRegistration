@@ -135,7 +135,7 @@ namespace VRP.API.Repositories.Services.Procedure
             await cityService.GetCityById(cityId);
         }
 
-        public async Task ApproveRequestedProcedure(ApproveRequestedProcedure request)
+        public async Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request)
         {
             var procedure = await GetProcedureInProcess(request.ProcedureId);
 
@@ -143,9 +143,11 @@ namespace VRP.API.Repositories.Services.Procedure
             procedure.StatusProcudure += 1;
             context.Entry(procedure).State = EntityState.Modified;
             await context.SaveChangesAsync();
+            var response = mapper.Map<ProcedureDto>(procedure);
+            return response;
         }
 
-        public async Task RejectRequestProcedure(RejectRequestedProcedure request)
+        public async Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request)
         {
             var procedure = await GetProcedureInProcess(request.ProcedureId);
 
@@ -153,6 +155,8 @@ namespace VRP.API.Repositories.Services.Procedure
             procedure.StatusProcudure += 2;
             context.Entry(procedure).State = EntityState.Modified;
             await context.SaveChangesAsync();
+            var response = mapper.Map<ProcedureDto>(procedure);
+            return response;
         }
 
         // get procedure and check satified status

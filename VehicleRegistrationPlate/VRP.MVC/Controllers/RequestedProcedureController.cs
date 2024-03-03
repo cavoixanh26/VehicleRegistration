@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VRP.MVC.Models.Procedures;
+using VRP.MVC.Models.Procedures.HandleProcedure;
 using VRP.MVC.Repositories.HttpClient;
 
 namespace VRP.MVC.Controllers
@@ -26,6 +27,24 @@ namespace VRP.MVC.Controllers
         {
             var response = await httpCallService.GetData<RequestedProcedure>($"RequestedProcedures/{id}", null);
             return View(response);
+        }
+
+        [HttpPost("reject-procedure")]
+        public async Task<IActionResult> RejectProcedure(RejectRequestedProcedure request)
+        {
+            var response = await httpCallService.PutData<ProcedureDto, RejectRequestedProcedure>
+                ("RequestedProcedures/rejection-request", request);
+
+            return Json(new {success = true});
+        }
+
+        [HttpPost("approve-procedure")]
+        public async Task<IActionResult> ApproveProcedure(ApproveRequestedProcedure request)
+        {
+            var response = await httpCallService.PutData<ProcedureDto, ApproveRequestedProcedure>
+                ("RequestedProcedures/approval-request", request);
+
+            return Json(new { success = true });
         }
     }
 }

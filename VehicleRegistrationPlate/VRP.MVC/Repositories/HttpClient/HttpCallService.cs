@@ -76,5 +76,32 @@ namespace VRP.MVC.Repositories.HttpClient
             }
             return data;
         }
+
+        public async Task<T> PutData<T, TRequest>(string endPoint, TRequest request)
+        {
+            T data = default(T);
+
+            var url = ApiUrl.Url + endPoint;
+
+            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = content
+            };
+
+            var httpClient = httpClientFactory.CreateClient();
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                data = await response.Content.ReadFromJsonAsync<T>().ConfigureAwait(false);
+            }
+            else
+            {
+                Debug.WriteLine("Failure");
+            }
+            return data;
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace VRP.MVC.Repositories.HttpClient
     {
         Task<T> GetData<T>(string endPoint, BasePagingRequest request);
         Task<T> PostData<T, TRequest>(string endPoint, TRequest request);
+        Task<T> PutData<T, TRequest>(string endPoint, TRequest request);
     }
 }

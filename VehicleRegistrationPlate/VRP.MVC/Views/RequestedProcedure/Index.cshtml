@@ -46,9 +46,37 @@
                 <td>@pro.StatusProcedureName</td>
                 <td>
                     <a asp-controller="RequestedProcedure" asp-action="GetDetail" asp-route-id="@pro.Id" class="btn btn-primary">Show detail</a>
-                    <button type="button" class="btn btn-danger">Reject</button>
+                    @if (pro.StatusProcudure == 0 || pro.StatusProcudure == 3)
+                    {
+                        <button onclick="ConfirmRequest('Are you sure want to reject?', 'Reject', @pro.Id)" type="button" class="btn btn-danger">Reject</button>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    function RejectAction(procedureId) {
+        $.ajax({
+            url: '@Url.Action("RejectProcedure", "RequestedProcedure")',
+            type: 'POST',
+            data: { ProcedureId: procedureId },
+            success: function (result) {
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+    function ConfirmRequest(message, typeRequest, procedureId) {
+    if (confirm(message)) {
+        if (typeRequest == 'Reject') {
+            RejectAction(procedureId);
+        } if (typeRequest == 'Appove') {
+            ApproveAction(procedureId);
+        }
+    }
+}
+</script>

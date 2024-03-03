@@ -50,8 +50,8 @@ namespace VRP.API.Controllers
         {
             try
             {
-                await procedureService.ApproveRequestedProcedure(request);
-                return NoContent();
+                var response = await procedureService.ApproveRequestedProcedure(request);
+                return Ok(response);
             }
             catch (HttpException ex)
             {
@@ -64,8 +64,8 @@ namespace VRP.API.Controllers
         {
             try
             {
-                await procedureService.RejectRequestProcedure(request);
-                return NoContent();
+                var response = await procedureService.RejectRequestProcedure(request);
+                return Ok(response);
             }
             catch (HttpException ex)
             {

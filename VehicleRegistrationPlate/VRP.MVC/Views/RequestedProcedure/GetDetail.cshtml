@@ -2,16 +2,71 @@
 @model RequestedProcedure
 @Html.Partial("StepperPartialView", Model)
 <h4>Xác thực thông tin chủ xe</h4>
-<div class="ms-4 me-4">
-    <p><b>Họ và tên: </b>@Model.UserInformationProcedure.FirstName @Model.UserInformationProcedure.MidlleName @Model.UserInformationProcedure.LastName</p>
-    <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure.DateOfBirth.ToString("dd/MM/yyyy")</p>
-    <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceLocation</p>
-    <p><b>Số điện thoại: </b>@Model.UserInformationProcedure.PhoneNumber</p>
-    <p><b>Email: </b>@Model.UserInformationProcedure.Email</p>
-    <p><b>Địa chỉ: </b>@Model.UserInformationProcedure.Street, @Model.UserInformationProcedure.CommuneName, @Model.UserInformationProcedure.DistrictName, @Model.UserInformationProcedure.CityName</p>
-</div>
+@if (Model != null)
+{
+    <div class="ms-4 me-4">
+        <p><b>Họ và tên: </b>@Model.UserInformationProcedure.FirstName @Model.UserInformationProcedure.MidlleName @Model.UserInformationProcedure.LastName</p>
+        <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure.DateOfBirth.ToString("dd/MM/yyyy")</p>
+        <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceLocation</p>
+        <p><b>Số điện thoại: </b>@Model.UserInformationProcedure.PhoneNumber</p>
+        <p><b>Email: </b>@Model.UserInformationProcedure.Email</p>
+        <p><b>Địa chỉ: </b>@Model.UserInformationProcedure.Street, @Model.UserInformationProcedure.CommuneName, @Model.UserInformationProcedure.DistrictName, @Model.UserInformationProcedure.CityName</p>
+    </div>
 
-<div>
-    <button type="button" class="btn btn-success">Accept</button>
-    <button type="button" class="btn btn-danger">Reject</button>
-</div>
+    @if (Model.StatusProcudure == 0 || Model.StatusProcudure == 3)
+    {
+        <div>
+            <button onclick="ConfirmRequest('Are you sure want to approve?', 'Approve', @Model.Id)" type="button" class="btn btn-success">Accept</button>
+            <button onclick="ConfirmRequest('Are you sure want to reject?', 'Reject', @Model.Id)" type="button" class="btn btn-danger">Reject</button>
+
+        </div>
+    }
+}
+
+
+<script>
+    // Định nghĩa các biến URL
+    var rejectUrl = '@Url.Action("RejectProcedure", "RequestedProcedure")';
+    var approveUrl = '@Url.Action("ApproveProcedure", "RequestedProcedure")';
+
+
+    // Hàm xác nhận hành động
+    function ConfirmRequest(message, typeRequest, procedureId) {
+        if (confirm(message)) {
+            if (typeRequest === 'Reject') {
+                RejectAction(procedureId);
+            } else if (typeRequest === 'Approve') {
+                ApproveAction(procedureId);
+            }
+        }
+    }
+
+    // Hàm RejectAction
+    function RejectAction(procedureId) {
+        $.ajax({
+            url: rejectUrl,
+            type: 'POST',
+            data: { ProcedureId: procedureId },
+            success: function (result) {
+                window.location.href = '/requested-procedure/' + procedureId;
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+    // Hàm ApproveAction
+    function ApproveAction(procedureId) {
+        $.ajax({
+            url: approveUrl,
+            type: 'POST',
+            data: { ProcedureId: procedureId },
+            success: function (result) {
+                window.location.href = '/requested-procedure/' + procedureId;
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+</script>
