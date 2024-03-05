@@ -2,10 +2,13 @@
 using VRP.API.Models.Address;
 using VRP.API.Models.InformationUser;
 using VRP.API.Models.Procedure;
+using VRP.API.Models.Vehicle;
 using VRP.API.ViewModels.Locations.City;
 using VRP.API.ViewModels.Locations.Commune;
 using VRP.API.ViewModels.Locations.District;
 using VRP.API.ViewModels.Procedures;
+using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
+using VRP.API.ViewModels.Vehicles;
 
 namespace VRP.API.Mappings
 {
@@ -39,6 +42,13 @@ namespace VRP.API.Mappings
 
             CreateMap<RegistrationProcedure, RequestedProcedure>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ReverseMap();
+
+            CreateMap<TypeOfVehicle, TypeOfVehicleDto>()
+                .ReverseMap();
+            CreateMap<TypeOfVehicle, VehicleInformationProcedure>();
+            CreateMap<VehicleRegistration, VehicleInformationProcedure>();
+            CreateMap<VehicleRegistration, VehicleRequest>()
                 .ReverseMap();
         }
     }

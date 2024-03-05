@@ -64,7 +64,7 @@ namespace VRP.API
                 // infor of swagger
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-                    Title = "IMS Management Api",
+                    Title = "License plate registration",
                     Version = "v1",
                 });
                 // define swaggger auth

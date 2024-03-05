@@ -8,9 +8,13 @@
             <h4>
                 Xác thực thông tin chủ xe
             </h4>
-            @if (Model.StatusProcudure == 1)
+            @if (Model.StatusProcudure != 0 && Model.StatusProcudure != 2)
             {
                 <span class="mt-2 ms-1" style="color: green">(đã xác nhận)</span>
+            }
+            @if (Model.StatusProcudure == 2)
+            {
+                <span class="mt-2 ms-1" style="color: red">(đã từ chối)</span>
             }
         </div>
         <div class="ms-4 me-4">
@@ -95,6 +99,27 @@
                 </form>
             </div>
 
+        </div>
+    }
+
+    @if (Model.VehicleId != null)
+    {
+        <div class="mb-3">
+            <div class="d-flex">
+                <h4>Xác thực thông tin xe</h4>
+                @if (Model.StatusProcudure == 4)
+                {
+                    <span class="mt-2 ms-1" style="color: green">(đã xác nhận)</span>
+                }@if (Model.StatusProcudure == 5)
+                {
+                    <span class="mt-2 ms-1" style="color: red">(đã từ chối)</span>
+                }
+            </div>
+            <div class="ms-4 me-4">
+                <p><b>Số máy (Engine N0): </b> - <b>Số khung (classis N0): </b></p>
+                <p><b>Loại xe: </b> - <b>Nhãn hiệu: </b></p>
+                <p><b>Màu sơn: </b> - <b>Số loại: </b></p>
+            </div>
         </div>
     }
 }

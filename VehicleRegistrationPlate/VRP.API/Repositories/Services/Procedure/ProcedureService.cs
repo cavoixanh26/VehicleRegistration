@@ -7,10 +7,13 @@ using VRP.API.Models;
 using VRP.API.Models.Authentication;
 using VRP.API.Models.InformationUser;
 using VRP.API.Models.Procedure;
+using VRP.API.Models.Vehicle;
 using VRP.API.Repositories.IServices.Locations;
 using VRP.API.Repositories.IServices.Procedures;
+using VRP.API.Repositories.IServices.Vehicles;
 using VRP.API.ViewModels.Procedures;
 using VRP.API.ViewModels.Procedures.HanldeRequest;
+using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 
 namespace VRP.API.Repositories.Services.Procedure
 {
@@ -22,6 +25,7 @@ namespace VRP.API.Repositories.Services.Procedure
         private readonly IDistrictService districtService;
         private readonly ICityService cityService;
         private readonly UserManager<AppUser> userManager;
+        private readonly ITypeOfVehicleService typeOfVehicleService;
 
         public ProcedureService(
             ApplicationDbcontext context,
@@ -29,7 +33,8 @@ namespace VRP.API.Repositories.Services.Procedure
             ICommuneService communeService,
             IDistrictService districtService,
             ICityService cityService,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            ITypeOfVehicleService typeOfVehicleService)
         {
             this.context = context;
             this.mapper = mapper;
@@ -37,6 +42,7 @@ namespace VRP.API.Repositories.Services.Procedure
             this.districtService = districtService;
             this.cityService = cityService;
             this.userManager = userManager;
+            this.typeOfVehicleService = typeOfVehicleService;
         }
         public async Task<CarLicensePlateResponse> CreateCarLicensePlate(CarLicensePlateRequest request, Guid userId)
         {
@@ -86,12 +92,21 @@ namespace VRP.API.Repositories.Services.Procedure
             if (procedureResponse == null)
                 throw HttpException.NotFoundException("Not Found Procedure");
 
+            var userInformationResponse = await GetUserInformationInProcedure(procedureId);
+
+            procedureResponse.UserInformationProcedure = userInformationResponse;
+
+            return procedureResponse;
+        }
+
+        private async Task<UserInformationProcedure> GetUserInformationInProcedure(int procedureId)
+        {
             var informationUserInProcedure = await context.InformationUserRequestInProcedures
-                .Include(x => x.Procedure)
-                .Include(x => x.City)
-                .Include(x => x.District)
-                .Include(x => x.Commune)
-                .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
+               .Include(x => x.Procedure)
+               .Include(x => x.City)
+               .Include(x => x.District)
+               .Include(x => x.Commune)
+               .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
             if (informationUserInProcedure == null)
                 throw HttpException.NotFoundException("Not Found procedure");
 
@@ -106,10 +121,9 @@ namespace VRP.API.Repositories.Services.Procedure
             userInformationResponse.CitizenIssuanceDate = citizenIdentifycationOfUser.IssuanceDate;
             userInformationResponse.CitizenIssuanceLocation = citizenIdentifycationOfUser.IssuanceLocation;
 
-            procedureResponse.UserInformationProcedure = userInformationResponse;
-
-            return procedureResponse;
+            return userInformationResponse;
         }
+
 
         public async Task<ProcedureResponse> GetProcedures(
             ProcedureRequest request, 
@@ -154,7 +168,7 @@ namespace VRP.API.Repositories.Services.Procedure
 
         public async Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request)
         {
-            var procedure = await GetProcedureInProcess(request.ProcedureId);
+            var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.VerifyInformationOfRequester);
 
             // up positive of enum
             procedure.StatusProcudure += 1;
@@ -166,7 +180,7 @@ namespace VRP.API.Repositories.Services.Procedure
 
         public async Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request)
         {
-            var procedure = await GetProcedureInProcess(request.ProcedureId);
+            var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.VerifyInformationOfRequester);
 
             // up positive of enum
             procedure.StatusProcudure += 2;
@@ -177,20 +191,69 @@ namespace VRP.API.Repositories.Services.Procedure
         }
 
         // get procedure and check satified status
-        private async Task<RegistrationProcedure> GetProcedureInProcess(int procedureId)
+        private async Task<RegistrationProcedure> GetProcedureInProcess(int procedureId, StatusProcudureEnum statusProcudure)
         {
             var procedure = await context.RegistrationProcedures
                 .FirstOrDefaultAsync(x => x.Id == procedureId);
             if (procedure == null)
                 throw HttpException.NotFoundException("Not found procedure");
 
-            if (procedure.StatusProcudure != StatusProcudureEnum.VerifyInformationOfRequester
-                && procedure.StatusProcudure != StatusProcudureEnum.VerifyVehicle)
+            if (procedure.StatusProcudure != statusProcudure)
             {
                 throw HttpException.BadRequestException("Can't handle this requested procedure");
             }
 
             return procedure;
+        }
+
+        public async Task<RequestedProcedure> UpdateVehicleInformation(int procedureId, VehicleRequest request, AppUser currentUser)
+        {
+
+            var procedure = await GetProcedureInProcess(procedureId, StatusProcudureEnum.ApprovalInformationOfRequester);
+
+            if (currentUser.Id != procedure.UserId)
+            {
+                throw HttpException.NoPermissionException("Can't access processing");
+            }
+
+            var vehicle = typeOfVehicleService.GetTypeVehicleDetail(request.TypeOfVehicleId);
+            if (vehicle == null)
+            {
+                throw HttpException.NotFoundException("Not found vehicle");
+            }
+
+            using (var transation = await context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var registerVehicle = mapper.Map<VehicleRegistration>(request);
+                    await context.VehicleRegistrations.AddAsync(registerVehicle);
+                    await context.SaveChangesAsync();
+                    var vehicleInformation = mapper.Map<VehicleInformationProcedure>(registerVehicle);
+                    vehicleInformation.TypeOfVehicle = vehicle.Name;
+
+                    procedure.VehicleId = registerVehicle.Id;
+                    procedure.StatusProcudure = StatusProcudureEnum.VerifyVehicle;
+                    context.RegistrationProcedures.Update(procedure);
+                    await context.SaveChangesAsync();
+                    await transation.CommitAsync();
+
+                    var response = mapper.Map<RequestedProcedure>(procedure);
+                    response.VehicleInformationProcedure = vehicleInformation;
+                    response.UserInformationProcedure = await GetUserInformationInProcedure(procedureId);
+
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    await transation.RollbackAsync();
+                    throw HttpException.BadRequestException("Handle fail");
+                }
+            }
+            
+
+            
+
         }
     }
 }

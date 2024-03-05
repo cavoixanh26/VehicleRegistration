@@ -5,6 +5,7 @@ using VRP.API.HandlingExceptions;
 using VRP.API.Models.Authentication;
 using VRP.API.Repositories.IServices.Procedures;
 using VRP.API.ViewModels.Procedures;
+using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 
 namespace VRP.API.Controllers
 {
@@ -39,6 +40,24 @@ namespace VRP.API.Controllers
                 return StatusCode((int)ex.Status, ex.Message);
             }
 
+        }
+
+        [HttpPut("car-license-plate/{id}")]
+        public async Task<ActionResult> VehicleRequestCarLicensePlateProcedure(int id, [FromBody] VehicleRequest request)
+        {
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                if (currentUser == null)
+                    return Unauthorized();
+
+                var response = await procedureService.UpdateVehicleInformation(id, request, currentUser);
+                return Ok(response);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.Status, ex.Message);
+            }
         }
     }
 }

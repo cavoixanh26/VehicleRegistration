@@ -1,4 +1,5 @@
 ﻿using VRP.API.Models.Procedure;
+using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 
 namespace VRP.API.ViewModels.Procedures
 {
@@ -28,5 +29,6 @@ namespace VRP.API.ViewModels.Procedures
         }
 
         public UserInformationProcedure? UserInformationProcedure { get; set; }
+        public VehicleInformationProcedure? VehicleInformationProcedure { get; set; }
     }
 }
