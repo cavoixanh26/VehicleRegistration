@@ -182,7 +182,7 @@ namespace VRP.API.Repositories.Services.Procedure
 
         public async Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request)
         {
-            var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.VerifyInformationOfRequester);
+            var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.VerifyInformationOfRequester, StatusProcudureEnum.VerifyVehicle);
 
             // up positive of enum
             procedure.StatusProcudure += 1;
@@ -194,7 +194,7 @@ namespace VRP.API.Repositories.Services.Procedure
 
         public async Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request)
         {
-            var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.VerifyInformationOfRequester);
+            var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.VerifyInformationOfRequester, StatusProcudureEnum.VerifyVehicle);
 
             // up positive of enum
             procedure.StatusProcudure += 2;
@@ -205,14 +205,14 @@ namespace VRP.API.Repositories.Services.Procedure
         }
 
         // get procedure and check satified status
-        private async Task<RegistrationProcedure> GetProcedureInProcess(int procedureId, StatusProcudureEnum statusProcudure)
+        private async Task<RegistrationProcedure> GetProcedureInProcess(int procedureId, params StatusProcudureEnum[] statusProcudure)
         {
             var procedure = await context.RegistrationProcedures
                 .FirstOrDefaultAsync(x => x.Id == procedureId);
             if (procedure == null)
                 throw HttpException.NotFoundException("Not found procedure");
 
-            if (procedure.StatusProcudure != statusProcudure)
+            if (!statusProcudure.Contains(procedure.StatusProcudure))
             {
                 throw HttpException.BadRequestException("Can't handle this requested procedure");
             }

@@ -1,17 +1,32 @@
 ﻿@using VRP.MVC.Models.Procedures;
 @model RequestedProcedure
 @Html.Partial("StepperPartialView", Model)
-<h4>Xác thực thông tin chủ xe</h4>
 @if (Model != null)
 {
-    <div class="ms-4 me-4">
-        <p><b>Họ và tên: </b>@Model.UserInformationProcedure.FirstName @Model.UserInformationProcedure.MidlleName @Model.UserInformationProcedure.LastName</p>
-        <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure.DateOfBirth.ToString("dd/MM/yyyy")</p>
-        <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceLocation</p>
-        <p><b>Số điện thoại: </b>@Model.UserInformationProcedure.PhoneNumber</p>
-        <p><b>Email: </b>@Model.UserInformationProcedure.Email</p>
-        <p><b>Địa chỉ: </b>@Model.UserInformationProcedure.Street, @Model.UserInformationProcedure.CommuneName, @Model.UserInformationProcedure.DistrictName, @Model.UserInformationProcedure.CityName</p>
+    <div class="mb-2">
+        <h4>Xác thực thông tin chủ xe</h4>
+        <div class="ms-4 me-4">
+            <p><b>Họ và tên: </b>@Model.UserInformationProcedure?.FirstName @Model.UserInformationProcedure?.MidlleName @Model.UserInformationProcedure?.LastName</p>
+            <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure?.DateOfBirth.ToString("dd/MM/yyyy")</p>
+            <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure?.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure?.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure?.CitizenIssuanceLocation</p>
+            <p><b>Số điện thoại: </b>@Model.UserInformationProcedure?.PhoneNumber</p>
+            <p><b>Email: </b>@Model.UserInformationProcedure?.Email</p>
+            <p><b>Địa chỉ: </b>@Model.UserInformationProcedure?.Street, @Model.UserInformationProcedure?.CommuneName, @Model.UserInformationProcedure?.DistrictName, @Model.UserInformationProcedure?.CityName</p>
+        </div>
     </div>
+    @if (Model.VehicleId != null)
+    {
+        <div class="mb-3">
+            <div class="d-flex">
+                <h4>Xác thực thông tin xe</h4>
+            </div>
+            <div class="ms-4 me-4">
+                <p><b>Số máy (Engine N0): </b>@Model.VehicleInformationProcedure?.EngineN0 - <b>Số khung (classis N0): </b>@Model.VehicleInformationProcedure?.ClassisN0</p>
+                <p><b>Loại xe: </b>@Model.VehicleInformationProcedure?.TypeOfVehicle - <b>Nhãn hiệu: </b>@Model.VehicleInformationProcedure?.CarBrand</p>
+                <p><b>Màu sơn: </b>@Model.VehicleInformationProcedure?.Color</p>
+            </div>
+        </div>
+    }
 
     @if (Model.StatusProcudure == 0 || Model.StatusProcudure == 3)
     {
