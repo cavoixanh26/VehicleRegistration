@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using VRP.API.HandlingExceptions;
 using VRP.API.Models;
 using VRP.API.Repositories.IServices.Vehicles;
@@ -27,9 +28,9 @@ namespace VRP.API.Repositories.Services.Vehicles
             return vehicleDto;
         }
 
-        public List<TypeOfVehicleDto> GetTypeVehicles()
+        public async Task<List<TypeOfVehicleDto>> GetTypeVehicles()
         {
-            var vehicles = context.TypeOfVehicles.ToList();
+            var vehicles = await context.TypeOfVehicles.ToListAsync();
             var vehicleDtos = mapper.Map<List<TypeOfVehicleDto>>(vehicles);
             return vehicleDtos;
         }

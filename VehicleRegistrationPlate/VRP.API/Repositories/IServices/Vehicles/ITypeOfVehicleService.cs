@@ -4,7 +4,7 @@ namespace VRP.API.Repositories.IServices.Vehicles
 {
     public interface ITypeOfVehicleService
     {
-        List<TypeOfVehicleDto> GetTypeVehicles();
+        Task<List<TypeOfVehicleDto>> GetTypeVehicles();
         TypeOfVehicleDto GetTypeVehicleDetail(int id);
     }
 }

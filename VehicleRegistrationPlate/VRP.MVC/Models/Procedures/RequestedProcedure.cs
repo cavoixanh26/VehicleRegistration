@@ -1,4 +1,6 @@
-﻿namespace VRP.MVC.Models.Procedures
+﻿using VRP.MVC.Models.Procedures.VehicleInformations;
+
+namespace VRP.MVC.Models.Procedures
 {
     public class RequestedProcedure
     {
@@ -11,6 +13,7 @@
         public int StatusProcudure { get; set; }
         public string StatusProcedureName { get; set; }
         public UserInformationProcedure? UserInformationProcedure { get; set; }
+        public VehicleInformation? VehicleInformationProcedure { get; set; }
     }
 
 

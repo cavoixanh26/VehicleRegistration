@@ -1,4 +1,5 @@
 ﻿@using VRP.MVC.Models.Procedures;
+@using VRP.MVC.Models.Procedures.VehicleInformations;
 @model RequestedProcedure
 @Html.Partial("StepperPartialView", Model)
 @if (Model != null)
@@ -18,12 +19,12 @@
             }
         </div>
         <div class="ms-4 me-4">
-            <p><b>Họ và tên: </b>@Model.UserInformationProcedure.FirstName @Model.UserInformationProcedure.MidlleName @Model.UserInformationProcedure.LastName</p>
-            <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure.DateOfBirth.ToString("dd/MM/yyyy")</p>
-            <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure.CitizenIssuanceLocation</p>
-            <p><b>Số điện thoại: </b>@Model.UserInformationProcedure.PhoneNumber</p>
-            <p><b>Email: </b>@Model.UserInformationProcedure.Email</p>
-            <p><b>Địa chỉ: </b>@Model.UserInformationProcedure.Street, @Model.UserInformationProcedure.CommuneName, @Model.UserInformationProcedure.DistrictName, @Model.UserInformationProcedure.CityName</p>
+            <p><b>Họ và tên: </b>@Model.UserInformationProcedure?.FirstName @Model.UserInformationProcedure?.MidlleName @Model.UserInformationProcedure?.LastName</p>
+            <p><b>Ngày tháng năm sinh: </b>@Model.UserInformationProcedure?.DateOfBirth.ToString("dd/MM/yyyy")</p>
+            <p><b>CMND/CCCD: </b>@Model.UserInformationProcedure?.CitizenId - <b>Ngày cấp: </b>@Model.UserInformationProcedure?.CitizenIssuanceDate.ToString("dd/MM/yyyy") - <b>Nơi cấp: </b>@Model.UserInformationProcedure?.CitizenIssuanceLocation</p>
+            <p><b>Số điện thoại: </b>@Model.UserInformationProcedure?.PhoneNumber</p>
+            <p><b>Email: </b>@Model.UserInformationProcedure?.Email</p>
+            <p><b>Địa chỉ: </b>@Model.UserInformationProcedure?.Street, @Model.UserInformationProcedure?.CommuneName, @Model.UserInformationProcedure?.DistrictName, @Model.UserInformationProcedure?.CityName</p>
         </div>
     </div>
     @if (Model.StatusProcudure == 1)
@@ -33,34 +34,37 @@
                 <h4>
                     Xác thực thông tin xe
                 </h4>
-                <form>
+                
+                @using (Html.BeginForm("UpdateVehicle", "MyProcedure", FormMethod.Post))
+                {
+                    <input name="procedureId" value="@Model.Id" hidden/>
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label class="form-label">Số máy (Engine N0) *</label>
-                            <input type="text" class="form-control">
+                            <input name="EngineN0" type="text" class="form-control">
                         </div>
                         <div class="mb-3 col-6">
                             <label class="form-label">Số khung (classis N0) *</label>
-                            <input type="text" class="form-control">
+                            <input name="ClassisN0" type="text" class="form-control">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label class="form-label">Loại xe *</label>
-                            <select class="form-select">
-                                <option selected>Open this select your district</option>
+                            <select name="TypeOfVehicleId" class="form-select" id="typeOfVehicle">
+                                <option selected>Open this select type of vehicle</option>
                             </select>
                         </div>
                         <div class="mb-3 col-6">
                             <label class="form-label">Màu sơn *</label>
-                            <input type="text" class="form-control">
+                            <input name="Color" type=" text" class="form-control">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label class="form-label">Nhãn hiệu *</label>
-                            <input type="text" class="form-control">
+                            <input name="CarBrand" type="text" class="form-control">
                         </div>
                         <div class="mb-3 col-6">
                             <label class="form-label">Số loại *</label>
@@ -70,7 +74,7 @@
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label class="form-label">
-                                Ảnh xe (hướng dẫn chọn ảnh 
+                                Ảnh xe (hướng dẫn chọn ảnh
                                 <i class="fa-solid fa-circle-info btn" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>)
                             </label>
                             <input type="file" class="form-control" />
@@ -96,10 +100,30 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Send request</button>
-                </form>
+                }
             </div>
-
         </div>
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/my-procedure/type-of-vehicle',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                        if (data != null) {
+                            var select = $('#typeOfVehicle');
+                            select.empty();
+                            $.each(data, function (index, item) {
+                                select.append($('<option>').val(item.id).text(item.name));
+                            });
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error: ' + errorThrown);
+                    }
+                });
+            });
+        </script>
     }
 
     @if (Model.VehicleId != null)
@@ -116,10 +140,11 @@
                 }
             </div>
             <div class="ms-4 me-4">
-                <p><b>Số máy (Engine N0): </b> - <b>Số khung (classis N0): </b></p>
-                <p><b>Loại xe: </b> - <b>Nhãn hiệu: </b></p>
-                <p><b>Màu sơn: </b> - <b>Số loại: </b></p>
+                <p><b>Số máy (Engine N0): </b>@Model.VehicleInformationProcedure?.EngineN0 - <b>Số khung (classis N0): </b>@Model.VehicleInformationProcedure?.ClassisN0</p>
+                <p><b>Loại xe: </b>@Model.VehicleInformationProcedure?.TypeOfVehicle - <b>Nhãn hiệu: </b>@Model.VehicleInformationProcedure?.CarBrand</p>
+                <p><b>Màu sơn: </b>@Model.VehicleInformationProcedure?.Color</p>
             </div>
         </div>
     }
 }
+

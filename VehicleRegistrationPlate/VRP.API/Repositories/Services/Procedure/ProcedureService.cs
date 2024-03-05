@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using VRP.API.Extensions;
 using VRP.API.HandlingExceptions;
 using VRP.API.Models;
@@ -87,7 +88,11 @@ namespace VRP.API.Repositories.Services.Procedure
 
         public async Task<RequestedProcedure> GetUserInformationProcedureById(int procedureId)
         {
-            var procedure = await context.RegistrationProcedures.FirstOrDefaultAsync(x => x.Id == procedureId);
+            var procedure = await context.RegistrationProcedures
+                .FirstOrDefaultAsync(x => x.Id == procedureId);
+            if (procedure == null)
+                throw HttpException.NotFoundException("Not found procedure");
+
             var procedureResponse = mapper.Map<RequestedProcedure>(procedure);
             if (procedureResponse == null)
                 throw HttpException.NotFoundException("Not Found Procedure");
@@ -95,6 +100,15 @@ namespace VRP.API.Repositories.Services.Procedure
             var userInformationResponse = await GetUserInformationInProcedure(procedureId);
 
             procedureResponse.UserInformationProcedure = userInformationResponse;
+            
+            if (procedure.VehicleId.HasValue)
+            {
+                var vehicleInProcedure = await context.VehicleRegistrations
+                    .Include(x => x.TypeOfVehicle)
+                    .FirstOrDefaultAsync(x => x.Id == procedure.VehicleId);
+                var vehicleInformation = mapper.Map<VehicleInformationProcedure>(vehicleInProcedure);
+                procedureResponse.VehicleInformationProcedure = vehicleInformation;
+            }
 
             return procedureResponse;
         }
@@ -211,10 +225,10 @@ namespace VRP.API.Repositories.Services.Procedure
 
             var procedure = await GetProcedureInProcess(procedureId, StatusProcudureEnum.ApprovalInformationOfRequester);
 
-            if (currentUser.Id != procedure.UserId)
-            {
-                throw HttpException.NoPermissionException("Can't access processing");
-            }
+            //if (currentUser.Id != procedure.UserId)
+            //{
+            //    throw HttpException.NoPermissionException("Can't access processing");
+            //}
 
             var vehicle = typeOfVehicleService.GetTypeVehicleDetail(request.TypeOfVehicleId);
             if (vehicle == null)

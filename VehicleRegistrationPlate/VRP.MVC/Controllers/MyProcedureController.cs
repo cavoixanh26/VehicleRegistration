@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VRP.MVC.Models.Procedures;
+using VRP.MVC.Models.Procedures.VehicleInformations;
+using VRP.MVC.Models.TypeOfVehicles;
 using VRP.MVC.Repositories.HttpClient;
 
 namespace VRP.MVC.Controllers
@@ -26,5 +28,23 @@ namespace VRP.MVC.Controllers
             var response = await httpCallService.GetData<RequestedProcedure>($"RequestedProcedures/{id}", null);
             return View(response);
         }
+
+        [Route("type-of-vehicle")]
+        public async Task<IActionResult> GetTypeOfVehicle()
+        {
+            var response = await httpCallService.GetData<List<TypeOfVehicle>>("Vehicle", null);
+            return Json(response);
+        }
+
+        [Route("update-vehicle-information")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateVehicle(int procedureId, VehicleRequest request)
+        {
+            var response = await httpCallService
+                .PutData<RequestedProcedure, VehicleRequest>
+                ($"Procedures/car-license-plate/{procedureId}", request);
+            return Json(response);
+        }
+
     }
 }

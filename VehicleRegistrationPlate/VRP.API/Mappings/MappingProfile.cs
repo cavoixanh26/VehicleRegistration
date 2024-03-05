@@ -47,7 +47,8 @@ namespace VRP.API.Mappings
             CreateMap<TypeOfVehicle, TypeOfVehicleDto>()
                 .ReverseMap();
             CreateMap<TypeOfVehicle, VehicleInformationProcedure>();
-            CreateMap<VehicleRegistration, VehicleInformationProcedure>();
+            CreateMap<VehicleRegistration, VehicleInformationProcedure>()
+                .ForMember(dest => dest.TypeOfVehicle, opt => opt.MapFrom(src => src.TypeOfVehicle.Name));
             CreateMap<VehicleRegistration, VehicleRequest>()
                 .ReverseMap();
         }
