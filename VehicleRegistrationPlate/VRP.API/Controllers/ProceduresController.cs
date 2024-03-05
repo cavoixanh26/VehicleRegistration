@@ -30,7 +30,7 @@ namespace VRP.API.Controllers
             {
                 //var currentUser = this.User;
                 //var userId = Guid.Parse(userManager.GetUserId(currentUser));
-                var userId = Guid.Parse("FACF3BAE-F611-476A-914F-7BBCFD0C3D2D");
+                var userId = Guid.Parse("66127FC8-3167-403E-8F39-7880AED4FF33");
                 var response = await procedureService.CreateCarLicensePlate(request, userId);
                 return Ok(response);
             }

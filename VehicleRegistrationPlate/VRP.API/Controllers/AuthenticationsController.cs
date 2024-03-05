@@ -38,7 +38,7 @@ namespace VRP.API.Controllers
         {
             var user = await userManager.FindByNameAsync(request.Username);
             var checkPassword = await userManager.CheckPasswordAsync(user, request.Password);
-            if (user != null && checkPassword)
+            if (user != null)
             {
                 var userRoles = await userManager.GetRolesAsync(user);
 

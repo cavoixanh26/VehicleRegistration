@@ -1,4 +1,5 @@
-﻿using VRP.API.ViewModels.Procedures;
+﻿using VRP.API.Models.Authentication;
+using VRP.API.ViewModels.Procedures;
 using VRP.API.ViewModels.Procedures.HanldeRequest;
 
 namespace VRP.API.Repositories.IServices.Procedures
@@ -6,7 +7,7 @@ namespace VRP.API.Repositories.IServices.Procedures
     public interface IProcedureService
     {
         Task<CarLicensePlateResponse> CreateCarLicensePlate(CarLicensePlateRequest request, Guid userId);
-        Task<ProcedureResponse> GetProcedures(ProcedureRequest request);
+        Task<ProcedureResponse> GetProcedures(ProcedureRequest request, AppUser currentUser);
         Task<RequestedProcedure> GetUserInformationProcedureById(int id);
         Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request);
         Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request);

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using VRP.API.Extensions;
 using VRP.API.HandlingExceptions;
 using VRP.API.Models;
+using VRP.API.Models.Authentication;
 using VRP.API.Models.InformationUser;
 using VRP.API.Models.Procedure;
 using VRP.API.Repositories.IServices.Locations;
@@ -21,19 +21,22 @@ namespace VRP.API.Repositories.Services.Procedure
         private readonly ICommuneService communeService;
         private readonly IDistrictService districtService;
         private readonly ICityService cityService;
+        private readonly UserManager<AppUser> userManager;
 
         public ProcedureService(
             ApplicationDbcontext context,
             IMapper mapper,
             ICommuneService communeService,
             IDistrictService districtService,
-            ICityService cityService)
+            ICityService cityService,
+            UserManager<AppUser> userManager)
         {
             this.context = context;
             this.mapper = mapper;
             this.communeService = communeService;
             this.districtService = districtService;
             this.cityService = cityService;
+            this.userManager = userManager;
         }
         public async Task<CarLicensePlateResponse> CreateCarLicensePlate(CarLicensePlateRequest request, Guid userId)
         {
@@ -108,15 +111,29 @@ namespace VRP.API.Repositories.Services.Procedure
             return procedureResponse;
         }
 
-        public async Task<ProcedureResponse> GetProcedures(ProcedureRequest request)
+        public async Task<ProcedureResponse> GetProcedures(
+            ProcedureRequest request, 
+            AppUser currentUser)
         {
+            //if (currentUser == null)
+            //    throw HttpException.NoPermissionException("");
+
             var procedures = context.RegistrationProcedures
                 .Where(x => string.IsNullOrEmpty(request.KeyWords)
                          || x.User.Email.Contains(request.KeyWords)
                          || x.User.PhoneNumber.Equals(request.KeyWords)
-                         && (!request.TypeOfRegistration.HasValue || (int)x.TypeOfRegistration == request.StatusProcedure)
-                         && (!request.StatusProcedure.HasValue || (int)x.StatusProcudure == request.StatusProcedure))
+                         && (!request.TypeOfRegistration.HasValue 
+                                || (int)x.TypeOfRegistration == request.StatusProcedure)
+                         && (!request.StatusProcedure.HasValue 
+                                || (int)x.StatusProcudure == request.StatusProcedure))
                 .Include(x => x.User);
+
+            //if (await userManager.IsInRoleAsync(currentUser, "User"))
+            //{
+            //    procedures = procedures
+            //        .Where(x => x.UserId == currentUser.Id)
+            //        .Include(x => x.User);
+            //}
 
             var procedureDtos = mapper.Map<List<ProcedureDto>>
                 (procedures.Paginate(request).OrderByDescending(x => x.Id));

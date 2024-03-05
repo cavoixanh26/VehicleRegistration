@@ -1,0 +1,42 @@
+﻿@using VRP.MVC.Extensions;
+@using VRP.MVC.Models.Procedures;
+
+@model ProcedureResponse
+<h4>List license plate procedure</h4>
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <select class="form-select me-2" aria-label="Default select example">
+                <option selected>Status</option>
+                <option value="0">Approval</option>
+                <option value="1">Rejection</option>
+            </select>
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Type of procedure</th>
+            <th scope="col">Type of registration</th>
+            <th scope="col">In process</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pro in Model.Procedures)
+        {
+            <tr>
+                <th scope="row">license plate</th>
+                <td>@pro.TypeOfRegistrationName</td>
+                <td>@pro.StatusProcudure.StatusMessageLicensePlate()</td>
+                <td>
+                    <a asp-controller="MyProcedure" asp-action="GetDetail" asp-route-id="@pro.Id" class="btn btn-primary">Show detail</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

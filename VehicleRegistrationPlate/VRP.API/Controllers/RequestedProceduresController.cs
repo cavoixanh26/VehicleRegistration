@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VRP.API.HandlingExceptions;
+using VRP.API.Models.Authentication;
 using VRP.API.Repositories.IServices.Procedures;
 using VRP.API.ViewModels.Procedures;
 using VRP.API.ViewModels.Procedures.HanldeRequest;
@@ -12,17 +14,25 @@ namespace VRP.API.Controllers
     public class RequestedProceduresController : ControllerBase
     {
         private readonly IProcedureService procedureService;
+        private readonly UserManager<AppUser> userManager;
 
-        public RequestedProceduresController(IProcedureService procedureService)
+        public RequestedProceduresController(
+            IProcedureService procedureService,
+            UserManager<AppUser> userManager)
         {
             this.procedureService = procedureService;
+            this.userManager = userManager;
         }
         [HttpGet]
         public async Task<ActionResult<ProcedureResponse>> GetProcedures([FromQuery] ProcedureRequest request)
         {
             try
             {
-                var response = await procedureService.GetProcedures(request);
+                var currentUser = await userManager.GetUserAsync(User);
+                //if (currentUser == null) 
+                //    return Unauthorized();
+
+                var response = await procedureService.GetProcedures(request, currentUser);
                 return Ok(response);
             }
             catch (HttpException ex)
