@@ -146,5 +146,12 @@
             </div>
         </div>
     }
-}
 
+    @if (Model.StatusProcudure == 4)
+    {
+        <div class="text-center">
+            <p class="text-success">Chúc mừng bạn đã hoàn tất xác thực thông tin</p>
+            <a asp-action="RotatorNumberLicensePlate" asp-controller="MyProcedure" asp-route-procedureId="@Model.Id" class="btn btn-success">Bắt đầu quay số</a>
+        </div>
+    }
+}

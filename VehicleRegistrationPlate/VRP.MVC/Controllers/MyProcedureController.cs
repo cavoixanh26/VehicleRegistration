@@ -46,5 +46,12 @@ namespace VRP.MVC.Controllers
             return Json(response);
         }
 
+
+        [Route("{procedureId}/number-rotator")]
+        [HttpGet]
+        public async Task<IActionResult> RotatorNumberLicensePlate(int procedureId)
+        {
+            return View();
+        }
     }
 }
