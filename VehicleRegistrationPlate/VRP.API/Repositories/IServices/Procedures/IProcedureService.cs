@@ -1,6 +1,7 @@
 ﻿using VRP.API.Models.Authentication;
 using VRP.API.ViewModels.Procedures;
 using VRP.API.ViewModels.Procedures.HanldeRequest;
+using VRP.API.ViewModels.Procedures.NumberRotatorLicensePlate;
 using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 
 namespace VRP.API.Repositories.IServices.Procedures
@@ -13,6 +14,8 @@ namespace VRP.API.Repositories.IServices.Procedures
         Task<RequestedProcedure> GetUserInformationProcedureById(int id);
         Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request);
         Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request);
+
+        Task<InformationLicensePlate> GetInformationUserInRotatorProcess(int procedureId, AppUser currentUser);
 
     }
 }

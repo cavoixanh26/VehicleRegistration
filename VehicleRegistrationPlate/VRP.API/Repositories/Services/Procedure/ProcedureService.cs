@@ -14,6 +14,7 @@ using VRP.API.Repositories.IServices.Procedures;
 using VRP.API.Repositories.IServices.Vehicles;
 using VRP.API.ViewModels.Procedures;
 using VRP.API.ViewModels.Procedures.HanldeRequest;
+using VRP.API.ViewModels.Procedures.NumberRotatorLicensePlate;
 using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 
 namespace VRP.API.Repositories.Services.Procedure
@@ -264,10 +265,20 @@ namespace VRP.API.Repositories.Services.Procedure
                     throw HttpException.BadRequestException("Handle fail");
                 }
             }
-            
+        }
 
-            
+        public async Task<InformationLicensePlate> GetInformationUserInRotatorProcess(int procedureId, AppUser currentUser)
+        {
+            var procedure = await GetProcedureInProcess(procedureId, StatusProcudureEnum.ApprovalVehicle);
+            var informationUserInProcedure = await context.InformationUserRequestInProcedures
+                .Include(x => x.City)
+                .Include(x => x.District)
+                .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
 
+            var informationLicensePlate = mapper.Map<InformationLicensePlate>(informationUserInProcedure);
+            informationLicensePlate.ProcedureId= procedureId;
+
+            return informationLicensePlate;
         }
     }
 }

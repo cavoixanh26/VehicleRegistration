@@ -1,15 +1,17 @@
-﻿@*
+﻿@using VRP.MVC.Models.Procedures.RotatorNumber;
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
+@model InformationLicensePlate
 
 <div class="container">
-    <p>Xin chào , Chúc bạn quay được biển số xe mong muốn !!!</p>
+    <p>Xin chào <b>@Model?.FirstName @Model?.MiddleName @Model?.LastName</b>, Chúc bạn quay được biển số xe mong muốn !!!</p>
     <div class="d-flex">
         <p>Biển số xe của bạn sẽ là: </p>
         <div class="ms-2 border border-2 border-success rounded p-2 text-center">
-            <p class="m-0 fw-bold">29 - X5</p>
+            <p class="m-0 fw-bold">@Model.CityNumberIdentify - @Model.DistrictNumberIdentify</p>
             <p class="m-0 fw-bold">???.??</p>
         </div>
     </div>
@@ -42,7 +44,6 @@
         // Stop the continuous generation after 5 seconds
         setTimeout(function() {
             clearInterval(intervalId); // Stop the interval
-            generateButton.disabled = false; // Re-enable the button
         }, 5000); // 5000 milliseconds = 5 seconds
     }
         // Event listener for the button click

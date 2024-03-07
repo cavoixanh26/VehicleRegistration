@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VRP.MVC.Models.Procedures;
+using VRP.MVC.Models.Procedures.RotatorNumber;
 using VRP.MVC.Models.Procedures.VehicleInformations;
 using VRP.MVC.Models.TypeOfVehicles;
 using VRP.MVC.Repositories.HttpClient;
@@ -51,7 +52,8 @@ namespace VRP.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> RotatorNumberLicensePlate(int procedureId)
         {
-            return View();
+            var response = await httpCallService.GetData<InformationLicensePlate>($"Procedures/{procedureId}/information-user-in-rotator", null);
+            return View(response);
         }
     }
 }

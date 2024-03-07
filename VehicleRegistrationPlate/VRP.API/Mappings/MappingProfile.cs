@@ -7,6 +7,7 @@ using VRP.API.ViewModels.Locations.City;
 using VRP.API.ViewModels.Locations.Commune;
 using VRP.API.ViewModels.Locations.District;
 using VRP.API.ViewModels.Procedures;
+using VRP.API.ViewModels.Procedures.NumberRotatorLicensePlate;
 using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 using VRP.API.ViewModels.Vehicles;
 
@@ -50,6 +51,12 @@ namespace VRP.API.Mappings
             CreateMap<VehicleRegistration, VehicleInformationProcedure>()
                 .ForMember(dest => dest.TypeOfVehicle, opt => opt.MapFrom(src => src.TypeOfVehicle.Name));
             CreateMap<VehicleRegistration, VehicleRequest>()
+                .ReverseMap();
+
+            CreateMap<InformationUserRequestInProcedure, InformationLicensePlate>()
+                .ForMember(dest => dest.CityNumberIdentify, opt => opt.MapFrom(src => src.City.NumberIdentify))
+                .ForMember(dest => dest.MiddleName, opt => opt.MapFrom(src => src.MidlleName))
+                .ForMember(dest => dest.DistrictNumberIdentify, opt => opt.MapFrom(src => src.District.NumberIdentify))
                 .ReverseMap();
         }
     }

@@ -59,5 +59,21 @@ namespace VRP.API.Controllers
                 return StatusCode((int)ex.Status, ex.Message);
             }
         }
+
+        [HttpGet("{procedureId}/information-user-in-rotator")]
+        public async Task<IActionResult> GetProcedureInRotator(int procedureId)
+        {
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var response = await procedureService.GetInformationUserInRotatorProcess(procedureId, currentUser);
+                return Ok(response);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.Status, ex.Message);
+            }
+        }
+
     }
 }
