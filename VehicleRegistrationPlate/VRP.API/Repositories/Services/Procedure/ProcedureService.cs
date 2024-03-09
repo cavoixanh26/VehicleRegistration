@@ -50,8 +50,8 @@ namespace VRP.API.Repositories.Services.Procedure
         {
             using (var transation = await context.Database.BeginTransactionAsync())
             {
-			    try
-			    {
+                try
+                {
                     var procedure = new RegistrationProcedure
                     {
                         UserId = userId,
@@ -61,8 +61,8 @@ namespace VRP.API.Repositories.Services.Procedure
 
                     // check exist location
                     await CheckExistedLocation(
-                        request.InformationUser.CommuneId, 
-                        request.InformationUser.DistrictId, 
+                        request.InformationUser.CommuneId,
+                        request.InformationUser.DistrictId,
                         request.InformationUser.CityId);
 
                     var informationUser = mapper.Map<InformationUserRequestInProcedure>(request.InformationUser);
@@ -80,10 +80,10 @@ namespace VRP.API.Repositories.Services.Procedure
                     };
                 }
                 catch (HttpException ex)
-			    {
+                {
                     await transation.RollbackAsync();
                     throw HttpException.BadRequestException(ex.Message);
-			    }
+                }
             }
         }
 
@@ -101,7 +101,7 @@ namespace VRP.API.Repositories.Services.Procedure
             var userInformationResponse = await GetUserInformationInProcedure(procedureId);
 
             procedureResponse.UserInformationProcedure = userInformationResponse;
-            
+
             if (procedure.VehicleId.HasValue)
             {
                 var vehicleInProcedure = await context.VehicleRegistrations
@@ -141,7 +141,7 @@ namespace VRP.API.Repositories.Services.Procedure
 
 
         public async Task<ProcedureResponse> GetProcedures(
-            ProcedureRequest request, 
+            ProcedureRequest request,
             AppUser currentUser)
         {
             //if (currentUser == null)
@@ -151,9 +151,9 @@ namespace VRP.API.Repositories.Services.Procedure
                 .Where(x => string.IsNullOrEmpty(request.KeyWords)
                          || x.User.Email.Contains(request.KeyWords)
                          || x.User.PhoneNumber.Equals(request.KeyWords)
-                         && (!request.TypeOfRegistration.HasValue 
+                         && (!request.TypeOfRegistration.HasValue
                                 || (int)x.TypeOfRegistration == request.StatusProcedure)
-                         && (!request.StatusProcedure.HasValue 
+                         && (!request.StatusProcedure.HasValue
                                 || (int)x.StatusProcudure == request.StatusProcedure))
                 .Include(x => x.User);
 
@@ -276,9 +276,42 @@ namespace VRP.API.Repositories.Services.Procedure
                 .FirstOrDefaultAsync(x => x.ProcedureId == procedureId);
 
             var informationLicensePlate = mapper.Map<InformationLicensePlate>(informationUserInProcedure);
-            informationLicensePlate.ProcedureId= procedureId;
+            informationLicensePlate.ProcedureId = procedureId;
+            informationLicensePlate.StatusProcudure = procedure.StatusProcudure;
 
             return informationLicensePlate;
+        }
+
+        public async Task<VehicleInformationProcedure> UpdateNumberLicensePlate(UpdateNumberLicensePlateRequest request, AppUser? currentUser)
+        {
+            using (var transition = await context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.ApprovalVehicle);
+
+                    var vehicle = await context.VehicleRegistrations.FirstOrDefaultAsync(x => x.Id == request.ProcedureId);
+                    if (vehicle == null)
+                    {
+                        throw HttpException.NotFoundException("Not Found vehicle");
+                    }
+
+                    vehicle.LicencePlate = request.NumberLicensePlate;
+                    procedure.StatusProcudure = StatusProcudureEnum.RotatedNumberLicensePlate;
+
+                    context.Entry(procedure).State = EntityState.Modified;
+                    context.Entry(vehicle).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    await transition.CommitAsync();
+                    var vehicleInformation = mapper.Map<VehicleInformationProcedure>(vehicle);
+                    return vehicleInformation;
+                }
+                catch (HttpException ex)
+                {
+                    await transition.RollbackAsync();
+                    throw HttpException.BadRequestException("Error");
+                }
+            }
         }
     }
 }

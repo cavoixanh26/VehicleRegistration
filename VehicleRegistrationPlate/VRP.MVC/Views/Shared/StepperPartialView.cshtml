@@ -8,9 +8,9 @@
     if (Model != null)
     {
         statusProcedure = Model.StatusProcudure;
-        precentProcess = ((statusProcedure / 3) + 1) * 33;
+        precentProcess = statusProcedure == 6 ? 100 : ((statusProcedure / 3) + 1) * (100 / 3);
         var calculateColor = statusProcedure % 3;
-        if (calculateColor == 1)
+        if (calculateColor == 1 || statusProcedure == 6)
         {
             colorProcess = "bg-success";
         }else if (calculateColor == 2)
@@ -50,7 +50,7 @@
                 <li class="text-center">
                     <span class="fa-stack">
                         
-                        @if (statusProcedure == 4)
+                        @if (statusProcedure == 4 || statusProcedure == 6)
                         {
                             <i class="fas fa-circle fa-stack-2x text-success "></i>
                             <i class="fas fa-check fa-stack-1x fa-inverse"></i>
@@ -70,8 +70,16 @@
                 </li>
                 <li class="text-center">
                     <span class="fa-stack">
-                        <i class="fas fa-circle fa-stack-2x text-secondary"></i>
-                        <i class="fas fa-dollar-sign fa-stack-1x fa-inverse"></i>
+                        @if (statusProcedure == 6)
+                        {
+                            <i class="fas fa-circle fa-stack-2x text-success"></i>
+                            <i class="fas fa-dollar-sign fa-stack-1x fa-inverse"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-circle fa-stack-2x text-secondary"></i>
+                            <i class="fas fa-dollar-sign fa-stack-1x fa-inverse"></i>
+                        }
                     </span>
                     <p>Done License Plate</p>
                 </li>

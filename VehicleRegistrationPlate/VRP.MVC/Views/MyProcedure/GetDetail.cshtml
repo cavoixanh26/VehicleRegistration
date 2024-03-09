@@ -131,7 +131,7 @@
         <div class="mb-3">
             <div class="d-flex">
                 <h4>Xác thực thông tin xe</h4>
-                @if (Model.StatusProcudure == 4)
+                @if (Model.StatusProcudure == 4 || Model.StatusProcudure == 6)
                 {
                     <span class="mt-2 ms-1" style="color: green">(đã xác nhận)</span>
                 }@if (Model.StatusProcudure == 5)

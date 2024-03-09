@@ -55,5 +55,15 @@ namespace VRP.MVC.Controllers
             var response = await httpCallService.GetData<InformationLicensePlate>($"Procedures/{procedureId}/information-user-in-rotator", null);
             return View(response);
         }
+
+        [Route("update-number-license-plate")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateNumberLicensePlate([FromBody]UpdateNumberLicensePlateRequest request)
+        {
+            var response = await httpCallService.PutData<VehicleInformation, UpdateNumberLicensePlateRequest>
+                ("Procedures/number-license-plate", request);
+            return Json(response);
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using VRP.API.HandlingExceptions;
 using VRP.API.Models.Authentication;
 using VRP.API.Repositories.IServices.Procedures;
 using VRP.API.ViewModels.Procedures;
+using VRP.API.ViewModels.Procedures.NumberRotatorLicensePlate;
 using VRP.API.ViewModels.Procedures.VehicleInformationProcedures;
 
 namespace VRP.API.Controllers
@@ -31,7 +32,7 @@ namespace VRP.API.Controllers
             {
                 //var currentUser = this.User;
                 //var userId = Guid.Parse(userManager.GetUserId(currentUser));
-                var userId = Guid.Parse("66127FC8-3167-403E-8F39-7880AED4FF33");
+                var userId = Guid.Parse("FACF3BAE-F611-476A-914F-7BBCFD0C3D2D");
                 var response = await procedureService.CreateCarLicensePlate(request, userId);
                 return Ok(response);
             }
@@ -75,5 +76,20 @@ namespace VRP.API.Controllers
             }
         }
 
+        [HttpPut("number-license-plate")]
+        public async Task<IActionResult> UpdateNumberLicensePlate([FromBody]UpdateNumberLicensePlateRequest request)
+        {
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var response = await procedureService.UpdateNumberLicensePlate(request, currentUser);
+                return Ok(response);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.Status, ex.Message);
+                throw;
+            }
+        }
     }
 }

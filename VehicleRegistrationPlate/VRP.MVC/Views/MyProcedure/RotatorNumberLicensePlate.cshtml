@@ -12,41 +12,68 @@
         <p>Biển số xe của bạn sẽ là: </p>
         <div class="ms-2 border border-2 border-success rounded p-2 text-center">
             <p class="m-0 fw-bold">@Model.CityNumberIdentify - @Model.DistrictNumberIdentify</p>
-            <p class="m-0 fw-bold">???.??</p>
+            <p class="m-0 fw-bold" id="numberLicensePlate">???.??</p>
         </div>
     </div>
 </div>
 
-<div class="container text-center">
-    <h1>Quay biển số xe</h1>
-    <h2 id="numberDisplay" class="mb-3 text-success">0</h2>
-    <button class="border border-2 border-success rounded" id="generateButton">Bắt đầu</button>
-</div>
+@if (Model.StatusProcudure == 4)
+{
+    <div class="container text-center">
+        <h1>Quay biển số xe</h1>
+        <h2 id="numberDisplay" class="mb-3 text-success">0</h2>
+        <button class="border border-2 border-success rounded" id="generateButton">Bắt đầu</button>
+    </div>
 
-
+}
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    const numberDisplay = document.getElementById('numberDisplay');
-    const generateButton = document.getElementById('generateButton');
+    document.addEventListener('DOMContentLoaded', function () {
+        const numberDisplay = document.getElementById('numberDisplay');
+        const generateButton = document.getElementById('generateButton');
+        var finalNumber = null;
 
-    // Function to generate and display a random number
-    function generateRandomNumber() {
-        const randomNumber = Math.floor(Math.random() * 99999) + 1; // Generate a random number between 1 and 100
-        numberDisplay.textContent = randomNumber;
-    }
-    // Function to start the continuous random number generation
-    function startContinuousGeneration() {
-        generateButton.disabled = true; // Disable the button during generation
+        // Function to generate and display a random number
+        function generateRandomNumber() {
+            const randomNumber = Math.floor(Math.random() * 99999) + 1; // Generate a random number between 1 and 100
+            numberDisplay.textContent = randomNumber;
+            finalNumber = randomNumber;
+        }
+        // Function to start the continuous random number generation
+        function startContinuousGeneration() {
+            generateButton.disabled = true; // Disable the button during generation
 
-        // Generate and display a random number every 100 milliseconds (0.1 seconds)
-        const intervalId = setInterval(generateRandomNumber, 100);
+            // Generate and display a random number every 100 milliseconds (0.1 seconds)
+            const intervalId = setInterval(generateRandomNumber, 100);
 
-        // Stop the continuous generation after 5 seconds
-        setTimeout(function() {
-            clearInterval(intervalId); // Stop the interval
-        }, 5000); // 5000 milliseconds = 5 seconds
-    }
+            // Stop the continuous generation after 5 seconds
+            setTimeout(function () {
+                clearInterval(intervalId); // Stop the interval
+                updateNumberLicensePlate(@Model.ProcedureId, finalNumber);
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
         // Event listener for the button click
         generateButton.addEventListener('click', startContinuousGeneration);
+
+        function updateNumberLicensePlate(procedureId, numberLicensePlate){
+            var proId = parseInt(procedureId);
+            var num = numberLicensePlate.toString();
+            var request = {
+                ProcedureId: proId,
+                NumberLicensePlate: num
+            };
+            $.ajax({
+                url: '/my-procedure/update-number-license-plate',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(request),
+                success: function (response){
+                    var numberLicense = document.getElementById('numberLicensePlate');
+                    numberLicense.textContent = response.licencePlate;
+                },
+                error: function (xhr, status, error){
+                    console.error('Error: ', error);
+                }
+            });
+        }
     });
 </script>

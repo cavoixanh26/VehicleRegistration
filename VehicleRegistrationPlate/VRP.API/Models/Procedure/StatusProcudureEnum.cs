@@ -15,6 +15,7 @@ namespace VRP.API.Models.Procedure
         [Description("Approval Vehicle")]
         ApprovalVehicle =4,
         [Description("Rejected Vehicle")]
-        RejectedVehicle = 5
+        RejectedVehicle = 5,
+        RotatedNumberLicensePlate = 6
     }
 }
