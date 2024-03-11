@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using VRP.API.HandlingExceptions;
 using VRP.API.Models;
+using VRP.API.Models.Procedure;
 using VRP.API.Repositories.IServices.Vehicles;
 using VRP.API.ViewModels.Vehicles;
 
@@ -19,6 +20,19 @@ namespace VRP.API.Repositories.Services.Vehicles
             this.context = context;
             this.mapper = mapper;
         }
+
+        public async Task<List<string>> GetExistNumberLicensePlate(NumberLicensePlateRequest request)
+        {
+            var existVehicle = await context.InformationUserRequestInProcedures
+                .Where(x => x.CityId == request.CityId && x.DistrictId == request.DistrictId
+                && x.Procedure.StatusProcudure == StatusProcudureEnum.RotatedNumberLicensePlate)
+                .Include(x => x.Procedure)
+                .ThenInclude(x => x.Vehicle)
+                .Select(x => x.Procedure.Vehicle.LicencePlate).ToListAsync();
+
+            return existVehicle;
+        }
+
         public TypeOfVehicleDto GetTypeVehicleDetail(int id)
         {
             var vehicle = context.TypeOfVehicles.Find(id);

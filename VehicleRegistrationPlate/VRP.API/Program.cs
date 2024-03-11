@@ -101,6 +101,14 @@ namespace VRP.API
 
             builder.Services.ConfigureApplicationServices();
 
+            builder.Services.AddCors(c =>
+            {
+                c.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+
             builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection(JwtSetting.JwtConfigure));
             var app = builder.Build();
 
@@ -119,6 +127,7 @@ namespace VRP.API
 
             app.UseAuthorization();
 
+            app.UseCors("CorsPolicy");
 
             app.MapControllers();
 

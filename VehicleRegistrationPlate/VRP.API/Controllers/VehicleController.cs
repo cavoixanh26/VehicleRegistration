@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VRP.API.Repositories.IServices.Vehicles;
+using VRP.API.ViewModels.Vehicles;
 
 namespace VRP.API.Controllers
 {
@@ -19,6 +20,14 @@ namespace VRP.API.Controllers
         public async Task<IActionResult> Get()
         {
             var response = await typeOfVehicleService.GetTypeVehicles();
+            return Ok(response);
+        }
+
+        [HttpGet("exist-license-plate")]
+        public async Task<IActionResult> GetAllExistLicensePlate([FromQuery]NumberLicensePlateRequest request)
+        {
+            var  response = await typeOfVehicleService.GetExistNumberLicensePlate(request);
+
             return Ok(response);
         }
     }

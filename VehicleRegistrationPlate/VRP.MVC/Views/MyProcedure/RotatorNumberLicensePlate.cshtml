@@ -26,15 +26,29 @@
     </div>
 
 }
+
+<h2 id="ok"></h2>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const numberDisplay = document.getElementById('numberDisplay');
         const generateButton = document.getElementById('generateButton');
         var finalNumber = null;
+        var existNumberLicensePlate = null;
+        getExistNumberLicensePlate(@Model.CityId, @Model.DistrictId)
+        .then(function (response){
+            existNumberLicensePlate = response;
+        })
+        .catch(function(error){
+            console.error('Error', error);
+        });
 
         // Function to generate and display a random number
         function generateRandomNumber() {
-            const randomNumber = Math.floor(Math.random() * 99999) + 1; // Generate a random number between 1 and 100
+            let randomNumber;
+            do {
+               randomNumber = Math.floor(Math.random() * 99999) + 1;
+            }while(existNumberLicensePlate.includes(randomNumber.toString()));
+
             numberDisplay.textContent = randomNumber;
             finalNumber = randomNumber;
         }
@@ -73,6 +87,26 @@
                 error: function (xhr, status, error){
                     console.error('Error: ', error);
                 }
+            });
+        }
+
+        function getExistNumberLicensePlate(cityId, districtId){
+            var request = {
+                CityId: cityId,
+                DistrictId: districtId
+            };
+            return new Promise(function (resolve, reject){
+                $.ajax({
+                    url: 'https://localhost:5001/api/Vehicle/exist-license-plate',
+                    type: 'GET',
+                    data: request,
+                    success: function(response){
+                        resolve(response);
+                    },
+                    error: function (xhr, status, error){
+                        reject(error);
+                    }
+                });
             });
         }
     });

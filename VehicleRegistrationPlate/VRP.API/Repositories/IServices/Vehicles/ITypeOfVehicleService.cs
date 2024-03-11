@@ -6,5 +6,6 @@ namespace VRP.API.Repositories.IServices.Vehicles
     {
         Task<List<TypeOfVehicleDto>> GetTypeVehicles();
         TypeOfVehicleDto GetTypeVehicleDetail(int id);
+        Task<List<string>> GetExistNumberLicensePlate(NumberLicensePlateRequest request);
     }
 }
