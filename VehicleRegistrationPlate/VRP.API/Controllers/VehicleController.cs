@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VRP.API.Repositories.IServices.Vehicles;
 using VRP.API.ViewModels.Vehicles;
@@ -7,6 +8,7 @@ namespace VRP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VehicleController : ControllerBase
     {
         private readonly ITypeOfVehicleService typeOfVehicleService;

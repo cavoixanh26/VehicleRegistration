@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VRP.API.HandlingExceptions;
@@ -9,6 +10,7 @@ namespace VRP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DistrictsController : ControllerBase
     {
         private readonly IDistrictService districtService;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VRP.API.HandlingExceptions;
@@ -12,6 +13,7 @@ namespace VRP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProceduresController : ControllerBase
     {
         private readonly IProcedureService procedureService;
@@ -30,9 +32,8 @@ namespace VRP.API.Controllers
         {
             try
             {
-                //var currentUser = this.User;
-                //var userId = Guid.Parse(userManager.GetUserId(currentUser));
-                var userId = Guid.Parse("FACF3BAE-F611-476A-914F-7BBCFD0C3D2D");
+                var currentUser = this.User;
+                var userId = Guid.Parse(userManager.GetUserId(currentUser));
                 var response = await procedureService.CreateCarLicensePlate(request, userId);
                 return Ok(response);
             }
