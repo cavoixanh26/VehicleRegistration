@@ -18,12 +18,17 @@ namespace VRP.MVC.Controllers
         }
         public IActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
             return View();
         }
 
         [Route("car-license-plate")]
         public async Task<IActionResult> RegisterLicensePlate()
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
+
             return View();
         }
 
@@ -31,6 +36,9 @@ namespace VRP.MVC.Controllers
         [Route("car-license-plate")]
         public async Task<IActionResult> RegisterLicensePlate(CarLicensePlateRequest request)
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
+
             var fullName = request.InformationUser.FirstName;
             var words = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             request.InformationUser.FirstName = words[0];

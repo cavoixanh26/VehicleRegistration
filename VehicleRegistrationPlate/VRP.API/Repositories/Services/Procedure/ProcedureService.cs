@@ -144,8 +144,8 @@ namespace VRP.API.Repositories.Services.Procedure
             ProcedureRequest request,
             AppUser currentUser)
         {
-            //if (currentUser == null)
-            //    throw HttpException.NoPermissionException("");
+            if (currentUser == null)
+                throw HttpException.NoPermissionException("");
 
             var procedures = context.RegistrationProcedures
                 .Where(x => string.IsNullOrEmpty(request.KeyWords)
@@ -157,12 +157,12 @@ namespace VRP.API.Repositories.Services.Procedure
                                 || (int)x.StatusProcudure == request.StatusProcedure))
                 .Include(x => x.User);
 
-            //if (await userManager.IsInRoleAsync(currentUser, "User"))
-            //{
-            //    procedures = procedures
-            //        .Where(x => x.UserId == currentUser.Id)
-            //        .Include(x => x.User);
-            //}
+            if (await userManager.IsInRoleAsync(currentUser, "User"))
+            {
+                procedures = procedures
+                    .Where(x => x.UserId == currentUser.Id)
+                    .Include(x => x.User);
+            }
 
             var procedureDtos = mapper.Map<List<ProcedureDto>>
                 (procedures.Paginate(request).OrderByDescending(x => x.Id));

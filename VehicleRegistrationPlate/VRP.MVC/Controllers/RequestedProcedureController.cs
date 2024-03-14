@@ -17,6 +17,9 @@ namespace VRP.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
+
             var requestedProcedureRequest = new ProcedureRequest();
             var response = await httpCallService.GetData<ProcedureResponse>("RequestedProcedures", requestedProcedureRequest);
             return View(response);
@@ -25,6 +28,9 @@ namespace VRP.MVC.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetDetail(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
+
             var response = await httpCallService.GetData<RequestedProcedure>($"RequestedProcedures/{id}", null);
             return View(response);
         }
@@ -32,6 +38,9 @@ namespace VRP.MVC.Controllers
         [HttpPost("reject-procedure")]
         public async Task<IActionResult> RejectProcedure(RejectRequestedProcedure request)
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
+
             var response = await httpCallService.PutData<ProcedureDto, RejectRequestedProcedure>
                 ("RequestedProcedures/rejection-request", request);
 
@@ -41,6 +50,9 @@ namespace VRP.MVC.Controllers
         [HttpPost("approve-procedure")]
         public async Task<IActionResult> ApproveProcedure(ApproveRequestedProcedure request)
         {
+            if (!User.Identity.IsAuthenticated)
+                return Redirect("./Login");
+
             var response = await httpCallService.PutData<ProcedureDto, ApproveRequestedProcedure>
                 ("RequestedProcedures/approval-request", request);
 

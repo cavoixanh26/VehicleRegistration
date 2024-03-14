@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using VRP.MVC.Repositories.HttpClient;
 
 namespace VRP.MVC
@@ -11,7 +14,30 @@ namespace VRP.MVC
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            context.Token = context.Request.Cookies["access_token"];
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
             builder.Services.AddHttpClient();
+
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddScoped<IHttpCallService, HttpCallService>();
 
@@ -30,6 +56,7 @@ namespace VRP.MVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

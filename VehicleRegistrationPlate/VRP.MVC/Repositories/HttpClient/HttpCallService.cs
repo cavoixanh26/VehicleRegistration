@@ -10,10 +10,12 @@ namespace VRP.MVC.Repositories.HttpClient
     public class HttpCallService : IHttpCallService
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly string token;
 
-        public HttpCallService(IHttpClientFactory httpClientFactory)
+        public HttpCallService(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             this.httpClientFactory = httpClientFactory;
+            this.token = httpContextAccessor.HttpContext.Request.Cookies["access_token"];
         }
         public async Task<T> GetData<T>(string endPoint, BasePagingRequest request = null)
         {
@@ -39,6 +41,11 @@ namespace VRP.MVC.Repositories.HttpClient
                 }
             };
 
+            if (!string.IsNullOrEmpty(token))
+            {
+                httpRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+
             var httpClient = httpClientFactory.CreateClient();
             HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage);
             if (response.IsSuccessStatusCode)
@@ -61,8 +68,17 @@ namespace VRP.MVC.Repositories.HttpClient
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url)
             {
-                Content = content
+                Content = content,
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" }
+                }
             };
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                httpRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
 
             var httpClient = httpClientFactory.CreateClient();
             var response = await httpClient.SendAsync(httpRequestMessage);
@@ -87,8 +103,17 @@ namespace VRP.MVC.Repositories.HttpClient
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, url)
             {
-                Content = content
+                Content = content,
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" }
+                }
             };
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                httpRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
 
             var httpClient = httpClientFactory.CreateClient();
             var response = await httpClient.SendAsync(httpRequestMessage);
