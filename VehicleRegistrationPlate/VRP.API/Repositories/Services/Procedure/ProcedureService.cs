@@ -226,10 +226,10 @@ namespace VRP.API.Repositories.Services.Procedure
 
             var procedure = await GetProcedureInProcess(procedureId, StatusProcudureEnum.ApprovalInformationOfRequester);
 
-            //if (currentUser.Id != procedure.UserId)
-            //{
-            //    throw HttpException.NoPermissionException("Can't access processing");
-            //}
+            if (currentUser.Id != procedure.UserId)
+            {
+                throw HttpException.NoPermissionException("Can't access processing");
+            }
 
             var vehicle = typeOfVehicleService.GetTypeVehicleDetail(request.TypeOfVehicleId);
             if (vehicle == null)
@@ -270,6 +270,9 @@ namespace VRP.API.Repositories.Services.Procedure
         public async Task<InformationLicensePlate> GetInformationUserInRotatorProcess(int procedureId, AppUser currentUser)
         {
             var procedure = await GetProcedureInProcess(procedureId, StatusProcudureEnum.ApprovalVehicle);
+            if (procedure.UserId != currentUser.Id)
+                throw HttpException.NoPermissionException("You cann't access");
+
             var informationUserInProcedure = await context.InformationUserRequestInProcedures
                 .Include(x => x.City)
                 .Include(x => x.District)
@@ -289,6 +292,8 @@ namespace VRP.API.Repositories.Services.Procedure
                 try
                 {
                     var procedure = await GetProcedureInProcess(request.ProcedureId, StatusProcudureEnum.ApprovalVehicle);
+                    if (procedure.UserId != currentUser.Id)
+                        throw HttpException.NoPermissionException("You cann't access");
 
                     var vehicle = await context.VehicleRegistrations.FirstOrDefaultAsync(x => x.Id == request.ProcedureId);
                     if (vehicle == null)

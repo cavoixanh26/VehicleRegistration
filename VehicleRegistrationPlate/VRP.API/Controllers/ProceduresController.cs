@@ -50,8 +50,8 @@ namespace VRP.API.Controllers
             try
             {
                 var currentUser = await userManager.GetUserAsync(User);
-                //if (currentUser == null)
-                //    return Unauthorized();
+                if (currentUser == null)
+                    return Unauthorized();
 
                 var response = await procedureService.UpdateVehicleInformation(id, request, currentUser);
                 return Ok(response);
@@ -68,6 +68,9 @@ namespace VRP.API.Controllers
             try
             {
                 var currentUser = await userManager.GetUserAsync(User);
+                if (currentUser == null)
+                    return Unauthorized();
+
                 var response = await procedureService.GetInformationUserInRotatorProcess(procedureId, currentUser);
                 return Ok(response);
             }
