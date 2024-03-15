@@ -8,7 +8,6 @@ namespace VRP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class VehicleController : ControllerBase
     {
         private readonly ITypeOfVehicleService typeOfVehicleService;

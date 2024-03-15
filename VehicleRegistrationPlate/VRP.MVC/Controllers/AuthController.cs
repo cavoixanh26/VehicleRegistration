@@ -46,5 +46,14 @@ namespace VRP.MVC.Controllers
                 return View(loginModel);
             }
         }
+
+        [Route("Logout")]
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            var response = await httpCallService.PostData<string, object>("Authentications/Logout", default);
+            Response.Cookies.Delete("access_token");
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

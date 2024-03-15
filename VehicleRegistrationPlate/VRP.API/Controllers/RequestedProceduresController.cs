@@ -48,7 +48,11 @@ namespace VRP.API.Controllers
         {
             try
             {
-                var response = await procedureService.GetUserInformationProcedureById(id);
+                var currentUser = await userManager.GetUserAsync(User);
+                if (currentUser == null)
+                    return Unauthorized();
+
+                var response = await procedureService.GetUserInformationProcedureById(id, currentUser);
                 return Ok(response);
             }
             catch (HttpException ex)
@@ -58,6 +62,7 @@ namespace VRP.API.Controllers
         }
 
         [HttpPut("approval-request")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ApproveRequest([FromBody] ApproveRequestedProcedure request)
         {
             try

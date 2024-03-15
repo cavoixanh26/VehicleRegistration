@@ -87,7 +87,7 @@ namespace VRP.API.Repositories.Services.Procedure
             }
         }
 
-        public async Task<RequestedProcedure> GetUserInformationProcedureById(int procedureId)
+        public async Task<RequestedProcedure> GetUserInformationProcedureById(int procedureId, AppUser currentUser)
         {
             var procedure = await context.RegistrationProcedures
                 .FirstOrDefaultAsync(x => x.Id == procedureId);
@@ -295,7 +295,7 @@ namespace VRP.API.Repositories.Services.Procedure
                     if (procedure.UserId != currentUser.Id)
                         throw HttpException.NoPermissionException("You cann't access");
 
-                    var vehicle = await context.VehicleRegistrations.FirstOrDefaultAsync(x => x.Id == request.ProcedureId);
+                    var vehicle = await context.VehicleRegistrations.FirstOrDefaultAsync(x => x.Id == procedure.VehicleId);
                     if (vehicle == null)
                     {
                         throw HttpException.NotFoundException("Not Found vehicle");

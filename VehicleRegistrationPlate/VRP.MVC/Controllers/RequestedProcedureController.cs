@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VRP.MVC.Models.Procedures;
 using VRP.MVC.Models.Procedures.HandleProcedure;
 using VRP.MVC.Repositories.HttpClient;
@@ -15,6 +16,7 @@ namespace VRP.MVC.Controllers
             this.httpCallService = httpCallService;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             if (!User.Identity.IsAuthenticated)

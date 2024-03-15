@@ -125,7 +125,7 @@
             });
         </script>
     }
-
+            
     @if (Model.VehicleId != null)
     {
         <div class="mb-3">
@@ -143,6 +143,10 @@
                 <p><b>Số máy (Engine N0): </b>@Model.VehicleInformationProcedure?.EngineN0 - <b>Số khung (classis N0): </b>@Model.VehicleInformationProcedure?.ClassisN0</p>
                 <p><b>Loại xe: </b>@Model.VehicleInformationProcedure?.TypeOfVehicle - <b>Nhãn hiệu: </b>@Model.VehicleInformationProcedure?.CarBrand</p>
                 <p><b>Màu sơn: </b>@Model.VehicleInformationProcedure?.Color</p>
+                @if (!string.IsNullOrEmpty(Model.VehicleInformationProcedure.LicencePlate))
+                {
+                    <h3>Biển số xe: @Model.VehicleInformationProcedure.LicencePlate</h3>
+                }
             </div>
         </div>
     }

@@ -11,7 +11,7 @@ namespace VRP.API.Repositories.IServices.Procedures
         Task<CarLicensePlateResponse> CreateCarLicensePlate(CarLicensePlateRequest request, Guid userId);
         Task<RequestedProcedure> UpdateVehicleInformation(int procedureId, VehicleRequest request, AppUser currentUser);
         Task<ProcedureResponse> GetProcedures(ProcedureRequest request, AppUser currentUser);
-        Task<RequestedProcedure> GetUserInformationProcedureById(int id);
+        Task<RequestedProcedure> GetUserInformationProcedureById(int id, AppUser currentUser);
         Task<ProcedureDto> ApproveRequestedProcedure(ApproveRequestedProcedure request);
         Task<ProcedureDto> RejectRequestProcedure(RejectRequestedProcedure request);
 
