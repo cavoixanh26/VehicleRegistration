@@ -61,6 +61,7 @@ namespace VRP.MVC
 
             app.MapControllerRoute(
                 name: "default",
+                defaults: new { controller = "Home", action = "Index"},
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();

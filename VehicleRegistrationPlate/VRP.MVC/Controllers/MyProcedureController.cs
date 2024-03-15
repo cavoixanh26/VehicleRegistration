@@ -54,7 +54,7 @@ namespace VRP.MVC.Controllers
             var response = await httpCallService
                 .PutData<RequestedProcedure, VehicleRequest>
                 ($"Procedures/car-license-plate/{procedureId}", request);
-            return Json(response);
+            return RedirectToAction("GetDetail", new {id = procedureId});
         }
 
 
