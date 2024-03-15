@@ -95,5 +95,21 @@ namespace VRP.API.Controllers
                 throw;
             }
         }
+
+        [HttpPut("{procedureId}/cancel-procedure")]
+        public async Task<IActionResult> CancelProcedure(int procedureId)
+        {
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                await procedureService.CancelProcedure(procedureId, currentUser);
+                return Ok();
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.Status, ex.Message);
+                throw;
+            }
+        }
     }
 }

@@ -93,7 +93,7 @@ namespace VRP.MVC.Repositories.HttpClient
             return data;
         }
 
-        public async Task<T> PutData<T, TRequest>(string endPoint, TRequest request)
+        public async Task<T> PutData<T, TRequest>(string endPoint, TRequest request = default)
         {
             T data = default(T);
 

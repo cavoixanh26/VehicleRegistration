@@ -77,6 +77,7 @@ namespace VRP.API.Controllers
         }
 
         [HttpPut("rejection-request")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RejectRequest([FromBody] RejectRequestedProcedure request)
         {
             try

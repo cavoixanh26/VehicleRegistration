@@ -9,5 +9,6 @@
         public const string ApprovalVehicle = "Approve vehicle";
         public const string RejectedVehicle = "Reject vehicle";
         public const string LicensePlateRotation = "License plate rotation";
+        public const string CancelProcedure = "Canceled procedure";
     }
 }

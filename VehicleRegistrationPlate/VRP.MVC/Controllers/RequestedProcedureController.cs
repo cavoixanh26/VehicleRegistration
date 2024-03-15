@@ -38,6 +38,7 @@ namespace VRP.MVC.Controllers
         }
 
         [HttpPost("reject-procedure")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RejectProcedure(RejectRequestedProcedure request)
         {
             if (!User.Identity.IsAuthenticated)
@@ -50,6 +51,7 @@ namespace VRP.MVC.Controllers
         }
 
         [HttpPost("approve-procedure")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ApproveProcedure(ApproveRequestedProcedure request)
         {
             if (!User.Identity.IsAuthenticated)

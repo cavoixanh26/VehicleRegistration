@@ -318,5 +318,27 @@ namespace VRP.API.Repositories.Services.Procedure
                 }
             }
         }
+
+        public async Task CancelProcedure(int procedureId, AppUser currentUser)
+        {
+            var listStatusProcedure = new StatusProcudureEnum[]
+            {
+                StatusProcudureEnum.VerifyInformationOfRequester,
+                StatusProcudureEnum.ApprovalInformationOfRequester,
+                StatusProcudureEnum.VerifyVehicle
+            };
+
+            var procedure = await GetProcedureInProcess(procedureId, listStatusProcedure);
+
+            if (procedure == null)
+                throw HttpException.BadRequestException("Can't cancel procedure");
+
+            if (procedure.UserId != currentUser.Id)
+                throw HttpException.NoPermissionException("Can't access function");
+
+            procedure.StatusProcudure = StatusProcudureEnum.CancelProcedure;
+            context.Entry(procedure).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
     }
 }

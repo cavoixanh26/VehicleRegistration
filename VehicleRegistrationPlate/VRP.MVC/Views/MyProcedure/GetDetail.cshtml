@@ -1,7 +1,10 @@
 ﻿@using VRP.MVC.Models.Procedures;
 @using VRP.MVC.Models.Procedures.VehicleInformations;
 @model RequestedProcedure
-@Html.Partial("StepperPartialView", Model)
+@if (Model.StatusProcudure != 7)
+{
+    @Html.Partial("StepperPartialView", Model)
+}
 @if (Model != null)
 {
     <div class="mb-3">
@@ -9,7 +12,7 @@
             <h4>
                 Xác thực thông tin chủ xe
             </h4>
-            @if (Model.StatusProcudure != 0 && Model.StatusProcudure != 2)
+            @if (Model.StatusProcudure != 0 && Model.StatusProcudure != 2 && Model.StatusProcudure != 7)
             {
                 <span class="mt-2 ms-1" style="color: green">(đã xác nhận)</span>
             }
@@ -131,7 +134,7 @@
         <div class="mb-3">
             <div class="d-flex">
                 <h4>Xác thực thông tin xe</h4>
-                @if (Model.StatusProcudure == 4 || Model.StatusProcudure == 6)
+                @if (Model.StatusProcudure == 4 || Model.StatusProcudure == 6 && Model.StatusProcudure != 7)
                 {
                     <span class="mt-2 ms-1" style="color: green">(đã xác nhận)</span>
                 }@if (Model.StatusProcudure == 5)

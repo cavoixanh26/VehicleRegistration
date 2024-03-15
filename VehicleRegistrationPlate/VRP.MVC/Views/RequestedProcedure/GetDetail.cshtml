@@ -1,6 +1,9 @@
 ﻿@using VRP.MVC.Models.Procedures;
 @model RequestedProcedure
+@if (Model.StatusProcudure != 7)
+{
 @Html.Partial("StepperPartialView", Model)
+}
 @if (Model != null)
 {
     <div class="mb-2">
@@ -35,6 +38,11 @@
             <button onclick="ConfirmRequest('Are you sure want to reject?', 'Reject', @Model.Id)" type="button" class="btn btn-danger">Reject</button>
 
         </div>
+    }
+
+    @if (Model.StatusProcudure == 7)
+    {
+        <h3>Đơn đăng ký đã hủy</h3>
     }
 }
 

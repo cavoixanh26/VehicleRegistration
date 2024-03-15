@@ -81,5 +81,12 @@ namespace VRP.MVC.Controllers
             return Json(response);
         }
 
+        [Route("cancel-procedure")]
+        [HttpPost]
+        public async Task<IActionResult> CancelProcedure(int procedureId)
+        {
+            await httpCallService.PutData<string, object>($"Procedures/{procedureId}/cancel-procedure", default);
+            return RedirectToAction(nameof(MyProcedureController.Index));
+        }
     }
 }

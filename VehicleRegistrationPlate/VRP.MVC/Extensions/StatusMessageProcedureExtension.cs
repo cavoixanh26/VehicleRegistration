@@ -27,6 +27,9 @@ namespace VRP.MVC.Extensions
                 case 5:
                     message = StatusProcedureMessage.RejectedVehicle;
                     break;
+                case 7: 
+                    message = StatusProcedureMessage.CancelProcedure;
+                    break;
                 default:
                     message = StatusProcedureMessage.LicensePlateRotation;
                     break;

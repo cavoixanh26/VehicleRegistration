@@ -17,5 +17,7 @@ namespace VRP.API.Repositories.IServices.Procedures
 
         Task<InformationLicensePlate> GetInformationUserInRotatorProcess(int procedureId, AppUser currentUser);
         Task<VehicleInformationProcedure> UpdateNumberLicensePlate(UpdateNumberLicensePlateRequest request, AppUser? currentUser);
+
+        Task CancelProcedure(int procedureId, AppUser currentUser);
     }
 }
