@@ -165,7 +165,7 @@ namespace VRP.API.Repositories.Services.Procedure
             }
 
             var procedureDtos = mapper.Map<List<ProcedureDto>>
-                (procedures.Paginate(request).OrderByDescending(x => x.Id));
+                (procedures.OrderByDescending(x => x.Id).Paginate(request));
 
             return new ProcedureResponse
             {

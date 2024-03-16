@@ -17,13 +17,12 @@ namespace VRP.MVC.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ProcedureRequest request)
         {
             if (!User.Identity.IsAuthenticated)
                 return Redirect("./Login");
 
-            var requestedProcedureRequest = new ProcedureRequest();
-            var response = await httpCallService.GetData<ProcedureResponse>("RequestedProcedures", requestedProcedureRequest);
+            var response = await httpCallService.GetData<ProcedureResponse>("RequestedProcedures", request);
             return View(response);
         }
 

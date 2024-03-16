@@ -55,7 +55,7 @@
         }
     </tbody>
 </table>
-
+@Html.Partial("PaginationPartialView", Model)
 <script>
     function RejectAction(procedureId) {
         $.ajax({
